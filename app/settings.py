@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'social.apps.django_app.default',
     'south',
+    'app',
     'home'
 )
 
@@ -99,3 +100,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Get your Twitter key/secret from https://apps.twitter.com/
+SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_KEY'
+SOCIAL_AUTH_TWITTER_SECRET = 'YOUR_TWITTER_SECRET'
+
+SOCIAL_AUTH_LOGIN_URL          = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/debug'
+SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
+
+LOGIN_URL = '/login/twitter'
