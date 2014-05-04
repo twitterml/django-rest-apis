@@ -2,4 +2,23 @@ You are logged in as {{request.user.username}}
 
 <br><br>
 
+{% if statuses and statuses.0 %}
+
+  Statuses:
+  
+  <br>
+  
+  {% for s in statuses %}
+  <br>
+  <a href="{{s.url}}">{{s.id}}</a> {{s.text}}
+  {% endfor %}
+  
+{% else %}
+
+  No statuses.
+
+{% endif %}
+
+<br><br>
+
 <a href="/logout">Logout</a>
