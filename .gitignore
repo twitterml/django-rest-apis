@@ -1,0 +1,5 @@
+*/examples*/*
+*/results*
+*.pyc
+.project
+.pydevproject
