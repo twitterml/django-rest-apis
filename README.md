@@ -19,8 +19,11 @@ GETTING STARTED
 - Create a Twitter App (https://apps.twitter.com/)
 - Specify your Twitter App tokens in app/settings.py under the following section:
 
-  SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_KEY'
-  SOCIAL_AUTH_TWITTER_SECRET = 'YOUR_TWITTER_SECRET'
+    SOCIAL_AUTH_TWITTER_KEY = 'YOUR_TWITTER_API_KEY'
+    SOCIAL_AUTH_TWITTER_SECRET = 'YOUR_TWITTER_API_SECRET'
+    
+    TWITTER_ACCESS_TOKEN = 'YOUR_TWITTER_ACCESS_TOKEN'
+    TWITTER_ACCESS_TOKEN_SECRET = 'YOUR_TWITTER_ACCESS_TOKEN_SECRET'
 
 - To initialize your database, run the from the `sample-djang-app` directory:
 
