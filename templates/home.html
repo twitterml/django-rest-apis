@@ -1,6 +1,15 @@
-You are logged in as {{request.user.username}}
+{% extends "base.html" %}
+
+{% block content %}
+
+Tweet:
 
 <br><br>
+
+<form action="/home" method="post">{% csrf_token %}
+  <input name="status" type="text">
+  <input type="submit" value="tweet">
+</form>
 
 {% if statuses and statuses.0 %}
 
@@ -21,15 +30,6 @@ You are logged in as {{request.user.username}}
 
 <br><br>
 
-Tweet:
 
-<br>
 
-<form action="/home" method="post">{% csrf_token %}
-  <input name="status" type="text">
-  <input type="submit" value="tweet">
-</form>
-
-<br><br>
-
-<a href="/logout">Logout</a>
+{% endblock %}
