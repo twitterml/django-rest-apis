@@ -12,7 +12,12 @@ def login(request):
 @login_required
 def home(request):
     
+    status = request.REQUEST.get("status", None)
+    
     api = get_twitter(request.user)
+    if status:
+        api.PostUpdates(status)
+    
     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
     
     context = {"request": request, 'statuses': statuses}
