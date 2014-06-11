@@ -44,7 +44,7 @@ def get_twitter(user):
     if not access_token_key or not access_token_secret:
         raise Exception('No user for twitter API call')
 
-    api = twitter.api.Api(
+    api = twitter.Api(
         # base_url='https://api.twitter.com/1.1?include_cards=1&include_entities=1',
         base_url='https://api.twitter.com/1.1',
         consumer_key=settings.SOCIAL_AUTH_TWITTER_KEY,
