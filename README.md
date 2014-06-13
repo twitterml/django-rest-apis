@@ -34,3 +34,11 @@ GETTING STARTED
   fab start
   
 - Open a browser and go to http://localhost:9000
+
+NOTES
+============
+If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the requst and the Twitter server.
+
+Use NTP to sync time on your server to compensate for the dift.
+
+If you are getting this error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
