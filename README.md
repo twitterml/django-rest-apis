@@ -1,7 +1,7 @@
-sample-django-app
+django-rest-apis
 =================
 
-Sample Django App for Twitter using OAuth
+Sample Django App using Twitter OAuth and REST APIs
 
 REQUIREMENTS
 ============
