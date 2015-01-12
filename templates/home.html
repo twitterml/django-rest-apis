@@ -2,20 +2,30 @@
 
 {% block content %}
 
-Tweet:
+<b>Tweet</b>
 
 <br><br>
 
 <form action="/home" method="post">{% csrf_token %}
   <input name="status" type="text">
-  <input type="submit" value="tweet">
+  <input type="submit" value="Tweet">
 </form>
 
-{% if statuses and statuses.0 %}
+<b>Update Profile Photo</b>
 
-  Statuses:
-  
-  <br>
+<br><br>
+
+<form action="/home" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+  <input type="submit" value="Update Photo">
+</form>
+
+<b>Statuses</b>
+
+<br>
+
+{% if statuses and statuses.0 %}
   
   {% for s in statuses %}
   <br>
@@ -27,9 +37,5 @@ Tweet:
   No statuses.
 
 {% endif %}
-
-<br><br>
-
-
 
 {% endblock %}

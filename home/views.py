@@ -1,9 +1,17 @@
+import base64
+
+from django import forms
 from django.shortcuts import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
 import twitter
+
+from home.models import Image 
+
+class ImageForm(forms.Form):
+    file = forms.FileField()
 
 def login(request):
     context = {"request": request}
@@ -17,10 +25,21 @@ def home(request):
     api = get_twitter(request.user)
     if status:
         api.PostUpdates(status)
-    
+        
+    form = ImageForm(request.POST, request.FILES)
+    print "valid: %s (%s)" % (form.is_valid(), form.errors)
+    if form.is_valid():
+        file = request.FILES['file']
+        
+        # save to file
+        image = Image(file = file)
+        image.save()
+        
+        api.UpdateImage(image.file.path)
+                
     statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
     
-    context = {"request": request, 'statuses': statuses}
+    context = {"request": request, 'statuses': statuses, 'form': form}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout
