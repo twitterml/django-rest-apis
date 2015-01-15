@@ -1,1 +1,1 @@
-web: fab start
+web: gunicorn app.wsgi --log-file -
