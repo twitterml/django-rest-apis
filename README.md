@@ -3,7 +3,7 @@ Twitter REST APIs with Django
 
 Sample Django App using Twitter OAuth and REST APIs
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 
 Requirements
 ============
@@ -20,23 +20,25 @@ Getting Started
 
 - Create a Twitter App (https://apps.twitter.com/)
 
-- In the Twitter App config, ensure the Callback URL is http://127.0.0.1:9000/complete/twitter
+- In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
 
 - Specify your Twitter App tokens in app/settings.py:
 
     SOCIAL_AUTH_TWITTER_KEY = ''
+    
     SOCIAL_AUTH_TWITTER_SECRET = ''
     
     TWITTER_ACCESS_TOKEN = ''
+    
     TWITTER_ACCESS_TOKEN_SECRET = ''
 
 - To initialize your database, run the from the `django-rest-apis` directory:
 
-  python manage.py syncdb
+  `python manage.py syncdb`
 
 - To start the server, run the following from the `django-rest-apis` directory:
 
-  fab start
+  `fab start`
   
 - Open a browser and go to http://127.0.0.1:9000
 
@@ -55,7 +57,8 @@ Deploying to Heroku is even easier.
 
 - Open a browser and go to the URL specified by your deploy
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
+
 
 NOTES
 ============
