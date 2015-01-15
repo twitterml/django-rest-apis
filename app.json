@@ -34,5 +34,8 @@
 			"value":"",
 			"required":true
 		}
+	},
+	"scripts":{
+		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput"
 	}
 }
