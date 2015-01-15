@@ -33,7 +33,7 @@
 			"value":"",
 			"required":true
 		}
-	}
+	},
 	"scripts":{
 		"postdeploy":"sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
 	}
