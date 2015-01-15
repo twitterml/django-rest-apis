@@ -1,27 +1,41 @@
 {
-  "name": "django-rest-apis",
-  "description": "Sample Python/Django site for Twitter showcasing OAuth and simple REST API calls. ",
-  "repository": "https://github.com/twitterdev/django-rest-apis",
-  "keywords": ["python", "django", "template", "skeleton"],
-  "env": {
-    "DJANGO_SECRET_KEY": {
-      "description": "A randomly generated secret to secure your Django installation",
-      "generator": "secret"
-    },
-    "CONSUMER_KEY": {
-      "description": "Twitter API consumer key (Visit http://apps.twitter.com)",
-    },
-    "CONSUMER_SECRET": {
-      "description": "Twitter API consumer secret "
-    },
-    "ACCESS_TOKEN": {
-      "description": "Twitter API access token"
-    },
-    "ACCESS_TOKEN_SECRET": {
-      "description": "Twitter API access token secret"
-    },
-  },
-  "scripts": {
-    "postdeploy": "sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
-  }
+	"name":"django-rest-apis",
+	"description":"Sample Python/Django site for Twitter showcasing OAuth and simple REST API calls. ",
+	"repository":"https://github.com/twitterdev/django-rest-apis",
+	"keywords":[
+		"python",
+		"django",
+		"template",
+		"skeleton"
+	],
+	"env":{
+		"DJANGO_SECRET_KEY":{
+			"description":"A randomly generated secret to secure your Django installation",
+			"generator":"secret"
+		},
+		"CONSUMER_KEY":{
+			"description":"Twitter API consumer key (Visit http://apps.twitter.com)",
+			"value":"",
+			"required":true
+		},
+		"CONSUMER_SECRET":{
+			"description":"Twitter API consumer secret",
+			"value":"",
+			"required":true
+		},
+		"ACCESS_TOKEN":{
+			"description":"Twitter API access token",
+			"value":"",
+			"required":true
+		},
+		"ACCESS_TOKEN_SECRET":{
+			"description":"Twitter API access token secret",
+			"value":"",
+			"required":true
+		},
+		
+	},
+	"scripts":{
+		"postdeploy":"sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
+	}
 }
