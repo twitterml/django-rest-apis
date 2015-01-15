@@ -19,28 +19,31 @@ Getting Started
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
-- Specify your Twitter App tokens in app/settings.py under the following section:
 
-    CONSUMER_KEY = ''
-    CONSUMER_SECRET = ''
+- In the Twitter App config, ensure the Callback URL is http://127.0.0.1:9000/complete/twitter
+
+- Specify your Twitter App tokens in app/settings.py:
+
+    SOCIAL_AUTH_TWITTER_KEY = ''
+    SOCIAL_AUTH_TWITTER_SECRET = ''
     
-    ACCESS_TOKEN = ''
-    ACCESS_TOKEN_SECRET = ''
+    TWITTER_ACCESS_TOKEN = ''
+    TWITTER_ACCESS_TOKEN_SECRET = ''
 
-- To initialize your database, run the from the `sample-djang-app` directory:
+- To initialize your database, run the from the `django-rest-apis` directory:
 
   python manage.py syncdb
 
-- To start the server, run the following from the `sample-djang-app` directory:
+- To start the server, run the following from the `django-rest-apis` directory:
 
   fab start
   
-- Open a browser and go to http://localhost:9000
+- Open a browser and go to http://127.0.0.1:9000
 
 Deploying to Heroku
 ============
 
-Deploying to Heroku is even easier. 
+Deploying to Heroku is even easier.  
 
 - Click on the Heroku button below
 - When prompted during the Heroku install, specify your:

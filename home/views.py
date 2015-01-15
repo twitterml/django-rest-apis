@@ -1,4 +1,3 @@
-from os import environ
 import base64
 
 from django import forms
@@ -51,10 +50,10 @@ def logout(request):
 
 def get_twitter(user):
 
-    consumer_key = settings.CONSUMER_KEY if settings.CONSUMER_KEY else environ.get('CONSUMER_KEY') 
-    consumer_secret = settings.CONSUMER_SECRET if settings.CONSUMER_KEY else environ.get('CONSUMER_SECRET')
-    access_token_key = settings.ACCESS_TOKEN if settings.ACCESS_TOKEN else environ.get('ACCESS_TOKEN')
-    access_token_secret = settings.ACCESS_TOKEN_SECRET if settings.ACCESS_TOKEN_SECRET else environ.get('ACCESS_TOKEN')
+    consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY  
+    consumer_secret = settings.SOCIAL_AUTH_TWITTER_SECRET 
+    access_token_key = settings.TWITTER_ACCESS_TOKEN 
+    access_token_secret = settings.TWITTER_ACCESS_TOKEN_SECRET 
 
     usa = UserSocialAuth.objects.get(user=user, provider='twitter')
     if usa:
@@ -67,7 +66,6 @@ def get_twitter(user):
         raise Exception('No user for twitter API call')
 
     api = twitter.Api(
-        # base_url='https://api.twitter.com/1.1?include_cards=1&include_entities=1',
         base_url='https://api.twitter.com/1.1',
         consumer_key=consumer_key,
         consumer_secret=consumer_secret,

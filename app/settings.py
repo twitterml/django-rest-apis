@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from os import environ
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -104,14 +106,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Get your Twitter key/secret from https://apps.twitter.com/
-CONSUMER_KEY = ''
-CONSUMER_SECRET = ''
-
-ACCESS_TOKEN = ''
-ACCESS_TOKEN_SECRET = ''
+SOCIAL_AUTH_TWITTER_KEY = environ.get('CONSUMER_KEY')               # Twitter API Consumer Key
+SOCIAL_AUTH_TWITTER_SECRET = environ.get('CONSUMER_SECRET')         # Twitter API Consumer Secret
 
 SOCIAL_AUTH_LOGIN_URL          = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
 LOGIN_URL = '/login/twitter'
+
+TWITTER_ACCESS_TOKEN = environ.get('ACCESS_TOKEN')                  # Twitter API Access Token
+TWITTER_ACCESS_TOKEN_SECRET = environ.get('ACCESS_TOKEN_SECRET')    # Twitter API Access Secret
+
