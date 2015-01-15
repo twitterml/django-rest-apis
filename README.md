@@ -47,6 +47,7 @@ Deploying to Heroku
 
 Deploying to Heroku is even easier.  
 
+- Create a Twitter App (https://apps.twitter.com/)
 - Click on the Heroku button below
 - When prompted during the Heroku install, specify your:
 
@@ -54,8 +55,10 @@ Deploying to Heroku is even easier.
 	- CONSUMER_SECRET
 	- ACCESS_TOKEN
 	- ACCESS_TOKEN_SECRET
+	
+- After deploying, in the Twitter App config, ensure the Callback URL is `http://your-app-name.herokuapp.com/complete/twitter`
 
-- Open a browser and go to the URL specified by your deploy
+- Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 

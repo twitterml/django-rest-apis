@@ -35,6 +35,6 @@
 		}
 	},
 	"scripts":{
-		"postdeploy":"sh -c 'python manage.py syncdb --noinput; python manage.py migrate --noinput'"
+		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput"
 	}
 }
