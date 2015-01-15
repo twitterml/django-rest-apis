@@ -1,5 +1,5 @@
 Django==1.6
 python-social-auth
-python-twitter==2.3
+python-twitter==2.2
 South==0.8.4
 Fabric==1.7.0
