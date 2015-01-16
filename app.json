@@ -2,6 +2,7 @@
 	"name":"django-rest-apis",
 	"description":"Sample Python/Django site for Twitter showcasing OAuth and simple REST API calls. ",
 	"repository":"https://github.com/twitterdev/django-rest-apis",
+	"addons": ["heroku-postgresql:hobby-dev"],
 	"keywords":[
 		"python",
 		"django",
@@ -33,5 +34,8 @@
 			"value":"",
 			"required":true
 		}
+	},
+	"scripts":{
+		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput"
 	}
 }
