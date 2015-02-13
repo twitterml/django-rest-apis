@@ -7,8 +7,11 @@ types of campaigns, including:
 - Capture @username via Twitter Login
 - Contest/sweepstakes sign-up via Twitter
 - Tweet out a photo from a user (requires user's explicit consent)
+- Induce interests via friends & followers 
 
-As always, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
+<img src="screenshot.png" style="width: 70%;"/>
+
+As always, when developing on top of the Twitter platform, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 
