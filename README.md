@@ -1,7 +1,14 @@
-Twitter REST APIs with Django
+Twitter Sign In and REST APIs
 =================
 
-Sample Django App using Twitter OAuth and REST APIs
+Sample Django App using Twitter Sign in (OAuth) and REST APIs. This is the basis for many
+types of campaigns, including:
+
+- Capture @username via Twitter Login
+- Contest/sweepstakes sign-up via Twitter
+- Tweet out a photo from a user (requires user's explicit consent)
+
+As always, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 
