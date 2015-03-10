@@ -21,15 +21,27 @@
   <input type="submit" value="Update Photo">
 </form>
 
-<b>Statuses</b>
+<b>Statuses ({{ statuses|length }})</b>
 
 <br>
+
+count|time|id|retweet_count|favorite_count|is_retweet|in_reply_to_tweet_id|in_reply_to_screen_name|status|image
 
 {% if statuses and statuses.0 %}
   
   {% for s in statuses %}
   <br>
-  <a href="http://twitter.com/{{s.user.screen_name}}/status/{{s.id}}" target="_target">{{s.id}}</a> {{s.text}}
+  {{ forloop.counter }}|
+  {{ s.created_at }}|
+  <a href="http://twitter.com/{{s.user.screen_name}}/status/{{s.id}}" target="_target">{{s.id}}</a>|
+  {{ s.retweet_count }}|
+  {{ s.favorite_count }}|
+  {{ s.retweeted }}|
+  {% if s.in_reply_to_status_id %}{{ s.in_reply_to_status_id }}{% else %}False{% endif %}|
+  
+  {% if s.in_reply_to_screen_name %}<a href="http://twitter.com/{{s.in_reply_to_screen_name}}" target="_target">{{ s.in_reply_to_screen_name }}{% else %}False{% endif %}</a>|
+  {{ s.text }}|
+  {% if s.media.0 %}{{ s.media.0.media_url }}{% else %}False{% endif %}
   {% endfor %}
   
 {% else %}

@@ -21,6 +21,9 @@ def login(request):
 def home(request):
     
     status = request.REQUEST.get("status", None)
+    screen_name = request.REQUEST.get("screen_name", None)
+    if not screen_name:
+        screen_name = request.user.username
     
     api = get_twitter(request.user)
     if status:
@@ -36,9 +39,25 @@ def home(request):
         image.save()
         
         api.UpdateImage(image.file.path)
-                
-    statuses = api.GetUserTimeline(screen_name=request.user.username, count=10)
-    
+        
+    statuses = []  
+    max_id = None   
+    while True:
+        
+        # get latest page
+        new_statuses = api.GetUserTimeline(screen_name=screen_name, count=200, max_id=max_id)
+
+        # out of statuses: done
+        if len(new_statuses) == 0:
+            break
+
+        max_id = min([s.id for s in new_statuses]) - 1
+        statuses = statuses + new_statuses
+        
+        # reached max: done
+        if len(statuses) >= 3200:
+            break
+
     context = {"request": request, 'statuses': statuses, 'form': form}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
