@@ -1,7 +1,7 @@
 {
-	"name":"django-rest-apis",
+	"name":"twitter-signin-and-apis",
 	"description":"Sample Python/Django site for Twitter showcasing OAuth and simple REST API calls. ",
-	"repository":"https://github.com/twitterdev/django-rest-apis",
+	"repository":"https://github.com/twitterdev/twitter-signin-and-apis",
 	"addons": ["heroku-postgresql:hobby-dev"],
 	"keywords":[
 		"python",

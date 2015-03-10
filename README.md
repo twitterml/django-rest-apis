@@ -13,7 +13,7 @@ types of campaigns, including:
 
 As always, when developing on top of the Twitter platform, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-signin-and-apis)
 
 Requirements
 ============
@@ -42,11 +42,11 @@ Getting Started
     
     TWITTER_ACCESS_TOKEN_SECRET = ''
 
-- To initialize your database, run the from the `django-rest-apis` directory:
+- To initialize your database, run the from the `twitter-signin-and-apis` directory:
 
   `python manage.py syncdb`
 
-- To start the server, run the following from the `django-rest-apis` directory:
+- To start the server, run the following from the `twitter-signin-and-apis` directory:
 
   `fab start`
   
@@ -70,7 +70,7 @@ Deploying to Heroku is even easier.
 
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-signin-and-apis)
 
 
 NOTES
