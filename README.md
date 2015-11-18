@@ -25,12 +25,19 @@ To run this sample code, you'll need to install the following libraries:
 - south (http://south.aeracode.org/)
 - Fabric (http://www.fabfile.org/)
 
+You can install these with the following command:
+
+    pip install -r requirements.txt
+
 Getting Started
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
 
 - In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
+
+- Specify your database settings in app/settings.py. Be sure to uncomment the section for using a local database.
+  (The default is set to easily deploy to Heroku.) 
 
 - Specify your Twitter App tokens in app/settings.py:
 
