@@ -110,7 +110,7 @@ statuses = api.GetUserTimeline(screen_name='%s', count=200)
 def media(request):
     
     examples = {}
-    examples["twurl"] = "Coming soon..."
+    examples["twurl"] = "twurl -H upload.twitter.com \"/1.1/media/upload.json\" -f /path/to/file -F media -X POST"
     examples["python"] = """
 
 import twitter
