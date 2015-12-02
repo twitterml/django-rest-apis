@@ -47,9 +47,6 @@ api.PostUpdates("This is a test tweet")
 """
 
     status = request.REQUEST.get("status", None)
-    screen_name = request.REQUEST.get("screen_name", None)
-    if not screen_name:
-        screen_name = request.user.username
     
     api = get_twitter(request.user)
     if status:
@@ -61,8 +58,12 @@ api.PostUpdates("This is a test tweet")
 @login_required
 def query(request):
     
+    screen_name = request.REQUEST.get("screen_name", None)
+    if not screen_name:
+        screen_name = request.user.username
+    
     examples = {}
-    examples["twurl"] = "twurl -d 'screen_name=%s' /1.1/statuses/home_timeline.json" % (request.user.username)
+    examples["twurl"] = "twurl -d 'screen_name=%s' /1.1/statuses/home_timeline.json" % (screen_name)
     examples["python"] = """
 
 import twitter
@@ -76,7 +77,7 @@ api = twitter.Api(
     
 statuses = api.GetUserTimeline(screen_name='%s', count=200)
 
-""" % (request.user.username)
+""" % (screen_name)
     
     api = get_twitter(request.user)
         
@@ -105,7 +106,7 @@ statuses = api.GetUserTimeline(screen_name='%s', count=200)
 def media(request):
     
     examples = {}
-    examples["twurl"] = ""
+    examples["twurl"] = "Coming soon..."
     examples["python"] = """
 
 import twitter
@@ -122,7 +123,6 @@ api.PostUpdates("This is a test tweet")
 """
     
     status = request.REQUEST.get("status", None)
-    screen_name = request.REQUEST.get("screen_name", None)
     
     api = get_twitter(request.user)
     if status:
@@ -146,7 +146,7 @@ api.PostUpdates("This is a test tweet")
 def profile(request):
     
     examples = {}
-    examples["twurl"] = "twurl -d 'status=Testing twurl' /1.1/statuses/update.json"
+    examples["twurl"] = "Coming soon..."
     examples["python"] = """
 
 import twitter
