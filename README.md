@@ -49,11 +49,11 @@ Getting Started
     
     TWITTER_ACCESS_TOKEN_SECRET = ''
 
-- To initialize your database, run the from the `twitter-rest-apis` directory:
+- To initialize your database, run the from the `django-rest-apis` directory:
 
   `python manage.py syncdb`
 
-- To start the server, run the following from the `twitter-rest-apis` directory:
+- To start the server, run the following from the `django-rest-apis` directory:
 
   `fab start`
   
