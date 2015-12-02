@@ -160,21 +160,9 @@ twurl -H upload.twitter.com "/1.1/media/upload.json" -d "command=FINALIZE&media_
 
     examples["python"] = """
 
-import twitter
+View the code on Github to see how the chunking and media/upload endpoint works:
 
-api = twitter.Api(
-    base_url='https://api.twitter.com/1.1',
-    consumer_key='YOUR_CONSUMER_KEY',
-    consumer_secret='YOUR_CONSUMER_SECRET',
-    access_token_key='YOUR_ACCESS_KEY',
-    access_token_secret='YOUR_ACCESS_SECRET')
-    
-url = '%s/media/upload.json' % api.upload_url
-
-data = {}
-data['media'] = open(str("/path/to/file"), 'rb').read()
-
-response = api._RequestUrl(url, 'POST', data=data)
+https://github.com/twitterdev/django-rest-apis/blob/master/home/views.py
 
 """
 
@@ -255,20 +243,15 @@ def media_upload(api, upload_url, image, media_type=None):
     }
     
     return result
-    
+
+# chunked media upload always does base64 encoded uploads    
 def media_upload_chunked(api, upload_url, image, media_type=None):
 
-    contents = open(str(image.file.path), 'rb').read()
+    import base64
 
-    # using 'media' parameter (binary)
-    if media_type == "binary":  
-        contents = contents
-        
-    # using 'media_data' parameter (base64)
-    else:                       
-        import base64
-        contents = base64.b64encode(contents)
-        
+    contents = open(str(image.file.path), 'rb').read()
+    contents = base64.b64encode(contents)
+
     chunks = chunkify(contents, SIZE_5MB) 
         
     # INIT
@@ -278,10 +261,7 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         "total_bytes": image.file.size
     }
     
-    print "INIT", data
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
-    print "INIT (Resp %s)" % json_data.status_code, json_data.content
-    
     json_data = json.loads(json_data.content)
     media_id = json_data["media_id_string"]
 
@@ -292,28 +272,19 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         data = {
             "command": "APPEND",
             "media_id": media_id,
-            "segment_index": count
+            "segment_index": count,
+            "media_data": c
         }
              
-        # using 'media' parameter (binary)
-        if media_type == "binary":  
-            data['media'] = c
-            
-        # using 'media_data' parameter (base64)
-        else:                       
-            data['media_data'] = c
-                    
         try:
-            print "APPEND", data
             json_data = api._RequestUrl(upload_url, 'POST', data=data)
-            print "APPEND (Resp %s)" % json_data.status_code, json_data.content
-            
             count = count + 1
             
         except TwitterError as e:
                     
             media_id = None
             json_data = e.args
+            break
 
     if media_id:
     
@@ -323,10 +294,7 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
             "media_id" : media_id
         }
         
-        print "FINALIZE", data
         json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        print "FINALIZE (Resp %s)" % json_data.status_code, json_data.content
-
         if json_data.status_code == 400:
             media_id = None
 
