@@ -3,6 +3,6 @@
 *.pyc
 .project
 .pydevproject
-app/settings_my.py
+**/*settings.py
 fabfile.py
 db.sqlite3
