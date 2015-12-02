@@ -1,4 +1,5 @@
 import base64
+import json
 
 from django import forms
 from django.shortcuts import *
@@ -11,7 +12,7 @@ import twitter
 from home.models import Image 
 
 # QUERY_MAX_STATUSES = 3200
-QUERY_MAX_STATUSES = 0
+QUERY_MAX_STATUSES = 200
 
 class ImageForm(forms.Form):
     file = forms.FileField()
@@ -162,18 +163,22 @@ response = api._RequestUrl(url, 'POST', data=data)
             data['media_data'] = contents
         
         json_data = api._RequestUrl(url, 'POST', data=data)
-        response_media = api._ParseAndCheckTwitter(json_data.content)
-        response['media'] = response_media
+        response['media'] = json.loads(json_data.content)
         
-        media_id = response_media['media_id_string']
-        
-        data = {'status': status, 'media_ids': [media_id]}
-
-        url = '%s/statuses/update.json' % api.base_url
-
-        json_data = api._RequestUrl(url, 'POST', data=data)
-        data = api._ParseAndCheckTwitter(json_data.content)
-        response['tweet'] = data
+        if not 'error' in response['media'] and not 'errors' in response['media']:
+            
+            response_media = api._ParseAndCheckTwitter(json_data.content)
+            response['media'] = response_media
+            
+            media_id = response_media['media_id_string']
+            
+            data = {'status': status, 'media_ids': [media_id]}
+    
+            url = '%s/statuses/update.json' % api.base_url
+    
+            json_data = api._RequestUrl(url, 'POST', data=data)
+            data = api._ParseAndCheckTwitter(json_data.content)
+            response['tweet'] = data
 
     context = {'request': request, 'examples': examples, 'form': form, 'response': response}
     return render_to_response('media.html', context, context_instance=RequestContext(request))

@@ -57,16 +57,18 @@ Learn more about uploading media on Twitter by reading the
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Upload media</button>
+      <button type="submit" class="btn btn-primary">Upload media</button>
     </div>
   </div>
-  {% if response %}
+  {% if response.media %}
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Media upload response</label>
     <div class="col-sm-8">
       <pre>{{response.media}}</pre>
     </div>
   </div>
+  {% endif %}
+  {% if response.tweet %}
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Tweet response</label>
     <div class="col-sm-8">

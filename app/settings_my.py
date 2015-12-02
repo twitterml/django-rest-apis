@@ -3,6 +3,8 @@ try:
 except ImportError, exp:
     pass
 
+DEBUG = True
+
 # Uncomment for local database
 DATABASES = {
     'default': {
