@@ -186,6 +186,9 @@ def media(request, type, examples, template):
         # save to file
         image = Image(file = file)
         image.save()
+
+        # metadata of file        
+        metadata = get_metadata(image.file.path) 
         
         media_id = None
         
@@ -210,9 +213,6 @@ def media(request, type, examples, template):
             data = api._ParseAndCheckTwitter(json_data.content)
             response['tweet'] = data
             
-        metadata = get_metadata(image.file.path) 
-        print metadata
-
     context = {'request': request, 'examples': examples, 'form': form, 'response': response, 'metadata': metadata}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
