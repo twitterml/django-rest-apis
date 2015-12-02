@@ -29,12 +29,14 @@
 -->
             <p>
                 {{ form.file }}
+                
+				{% if request.method == 'POST' and not form.is_valid %}
+				<div class="alert alert-danger" role="alert">
+        	    	<p>{{ form.file.errors }}</p>
+	            </div>
+    	        {% endif %}
             </p>
             
-			{% if request.method == 'POST' and not form.is_valid %}
-            <p>{{ form.file.errors }}</p>
-            {% endif %}
-
     </div>
   </div>
   <div class="form-group">

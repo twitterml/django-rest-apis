@@ -50,10 +50,12 @@ api.PostUpdates("This is a test tweet")
     status = request.REQUEST.get("status", None)
     
     api = get_twitter(request.user)
+    response = None
+    
     if status:
-        api.PostUpdates(status)
+        response = api.PostUpdates(status)[0].AsDict()
 
-    context = {"request": request, 'examples': examples}
+    context = {'request': request, 'examples': examples, 'response': response }
     return render_to_response('tweet.html', context, context_instance=RequestContext(request))
 
 @login_required
@@ -100,7 +102,7 @@ statuses = api.GetUserTimeline(screen_name='%s', count=200)
         if len(statuses) >= QUERY_MAX_STATUSES:
             break
 
-    context = {"request": request, 'examples': examples, 'statuses': statuses}
+    context = {'request': request, 'examples': examples, 'statuses': statuses}
     return render_to_response('query.html', context, context_instance=RequestContext(request))
 
 @login_required
@@ -119,15 +121,17 @@ api = twitter.Api(
     access_token_key='YOUR_ACCESS_KEY',
     access_token_secret='YOUR_ACCESS_SECRET')
     
-api.PostUpdates("This is a test tweet")
+url = '%s/media/upload.json' % api.upload_url
+
+data = {}
+data['media'] = open(str("/path/to/file"), 'rb').read()
+
+response = api._RequestUrl(url, 'POST', data=data)
 
 """
     
-    status = request.REQUEST.get("status", None)
-    
     api = get_twitter(request.user)
-    if status:
-        api.PostUpdates(status)
+    response = None
         
     form = ImageForm(request.POST, request.FILES)
     print "valid: %s (%s)" % (form.is_valid(), form.errors)
@@ -138,9 +142,15 @@ api.PostUpdates("This is a test tweet")
         image = Image(file = file)
         image.save()
         
-        api.UpdateImage(image.file.path)
+        url = '%s/media/upload.json' % api.upload_url
+        
+        data = {}
+        data['media'] = open(str(image.file.path), 'rb').read()
+        
+        json_data = api._RequestUrl(url, 'POST', data=data)
+        response = api._ParseAndCheckTwitter(json_data.content)
 
-    context = {"request": request, 'examples': examples, "form": form }
+    context = {'request': request, 'examples': examples, 'form': form, 'response': response}
     return render_to_response('media.html', context, context_instance=RequestContext(request))
 
 @login_required
@@ -164,6 +174,7 @@ api.UpdateImage("/path/to/file")
 """
     
     api = get_twitter(request.user)
+    response = None
         
     form = ImageForm(request.POST, request.FILES)
     print "valid: %s (%s)" % (form.is_valid(), form.errors)
@@ -174,9 +185,9 @@ api.UpdateImage("/path/to/file")
         image = Image(file = file)
         image.save()
         
-        api.UpdateImage(image.file.path)
+        response = api.UpdateImage(image.file.path)
         
-    context = {"request": request, 'examples': examples, "form": form}
+    context = {'request': request, 'examples': examples, 'form': form, 'response': response}
     return render_to_response('profile.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout
