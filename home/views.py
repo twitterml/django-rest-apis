@@ -136,7 +136,24 @@ response = api._RequestUrl(url, 'POST', data=data)
 def media_video(request):
 
     examples = {}
-    examples["twurl"] = "twurl -H upload.twitter.com \"/1.1/media/upload.json\" -f /path/to/file -F media -X POST"
+    examples["twurl"] = """
+
+split -b 5m video_launch.mp4
+
+twurl -H upload.twitter.com "/1.1/media/upload.json" -d "command=INIT&media_type=video/mp4&total_bytes=6634737" 
+
+{"media_id":601491637433475073,"media_id_string":"601491637433475073","expires_after_secs":3599}
+
+twurl -H upload.twitter.com "/1.1/media/upload.json" -d "command=APPEND&media_id=601491637433475073&segment_index=0" --file ./xaa --file-field "media"
+
+twurl -H upload.twitter.com "/1.1/media/upload.json" -d "command=APPEND&media_id=601491637433475073&segment_index=1" --file ./xab --file-field "media"
+
+twurl -H upload.twitter.com "/1.1/media/upload.json" -d "command=FINALIZE&media_id=601491637433475073" 
+
+{"media_id":601491637433475073,"media_id_string":"601491637433475073","size":6634737,"expires_after_secs":3600,"video":{"video_type":"video\/mp4"}}
+
+"""
+
     examples["python"] = """
 
 import twitter
