@@ -173,6 +173,7 @@ def media(request, type, examples, template):
     
     api = get_twitter(request.user)
     response = {}
+    metadata = None
         
     status = request.REQUEST.get("status", None)
     media_type = request.REQUEST.get("media_type", None)
@@ -208,8 +209,11 @@ def media(request, type, examples, template):
             json_data = api._RequestUrl(url, 'POST', data=data)
             data = api._ParseAndCheckTwitter(json_data.content)
             response['tweet'] = data
+            
+        metadata = get_metadata(image.file.path) 
+        print metadata
 
-    context = {'request': request, 'examples': examples, 'form': form, 'response': response}
+    context = {'request': request, 'examples': examples, 'form': form, 'response': response, 'metadata': metadata}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def media_upload(api, upload_url, image, media_type=None):
@@ -374,6 +378,31 @@ def get_twitter(user):
         access_token_secret=access_token_secret)
 
     return api
+
+def get_metadata(filename):
+    
+    from hachoir_core.error import HachoirError
+    from hachoir_core.cmd_line import unicodeFilename
+    from hachoir_parser import createParser
+    from hachoir_core.tools import makePrintable
+    from hachoir_metadata import extractMetadata
+    from hachoir_core.i18n import getTerminalCharset
+
+#     filename, realname = unicodeFilename(filename), filename
+    parser = createParser(filename, filename)
+    if not parser:
+        return "Unable to parse file"
+    
+    try:
+        metadata = extractMetadata(parser)
+    except HachoirError, err:
+        return "Metadata extraction error: %s" % unicode(err)
+    
+    if not metadata:
+        return "Unable to extract metadata"
+    
+    text = metadata.exportPlaintext()
+    return text
 
 def chunkify(l, n):
     n = max(1, n)

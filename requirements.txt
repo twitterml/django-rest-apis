@@ -6,3 +6,6 @@ python-social-auth
 python-twitter==2.2
 South==1.0.2
 Fabric==1.7.0
+hachoir-core
+hachoir-parser
+hachoir-metadata
