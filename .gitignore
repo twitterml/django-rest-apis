@@ -1,8 +1,7 @@
-*/examples*/*
-*/results*
 *.pyc
 .project
 .pydevproject
-**/*settings.py
+app/settings.py
+media*
 fabfile.py
 db.sqlite3
