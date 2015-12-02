@@ -16,6 +16,8 @@ from home.models import Image
 # QUERY_MAX_STATUSES = 3200
 QUERY_MAX_STATUSES = 200
 
+SIZE_5MB = 5 * 1024 * 1024
+
 class ImageForm(forms.Form):
     file = forms.FileField()
 
@@ -256,6 +258,19 @@ def media_upload(api, upload_url, image, media_type=None):
     
 def media_upload_chunked(api, upload_url, image, media_type=None):
 
+    contents = open(str(image.file.path), 'rb').read()
+
+    # using 'media' parameter (binary)
+    if media_type == "binary":  
+        contents = contents
+        
+    # using 'media_data' parameter (base64)
+    else:                       
+        import base64
+        contents = base64.b64encode(contents)
+        
+    chunks = chunkify(contents, SIZE_5MB) 
+        
     # INIT
     data = {
         "command": "INIT", 
@@ -271,29 +286,37 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
     media_id = json_data["media_id_string"]
 
     # APPEND
-    data = {
-        "command": "APPEND",
-        "media_id": media_id,
-        "segment_index": 0
-    }
-         
-    contents = open(str(image.file.path), 'rb').read()
+    count = 0 
+    for c in chunks:
+        
+        data = {
+            "command": "APPEND",
+            "media_id": media_id,
+            "segment_index": count
+        }
+             
+        # using 'media' parameter (binary)
+        if media_type == "binary":  
+            data['media'] = c
+            
+        # using 'media_data' parameter (base64)
+        else:                       
+            data['media_data'] = c
+                    
+        try:
+            print "APPEND", data
+            json_data = api._RequestUrl(upload_url, 'POST', data=data)
+            print "APPEND (Resp %s)" % json_data.status_code, json_data.content
+            
+            count = count + 1
+            
+        except TwitterError as e:
+                    
+            media_id = None
+            json_data = e.args
+
+    if media_id:
     
-    # using 'media' parameter (binary)
-    if media_type == "binary":  
-        data['media'] = contents
-        
-    # using 'media_data' parameter (base64)
-    else:                       
-        import base64
-        contents = base64.b64encode(contents)
-        data['media_data'] = contents
-        
-    try:
-        print "APPEND", data
-        json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        print "APPEND (Resp %s)" % json_data.status_code, json_data.content
-        
         # FINALIZE
         data = {
             "command": "FINALIZE", 
@@ -307,13 +330,7 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         if json_data.status_code == 400:
             media_id = None
 
-        json_data = json.loads(json_data.content)   
-        
-    except TwitterError as e:
-                
-        media_id = None
-        json_data = e.args
- 
+        json_data = json.loads(json_data.content)    
         
     result = {
         "media_id": media_id,
@@ -389,3 +406,7 @@ def get_twitter(user):
         access_token_secret=access_token_secret)
 
     return api
+
+def chunkify(l, n):
+    n = max(1, n)
+    return [l[i:i + n] for i in range(0, len(l), n)]
