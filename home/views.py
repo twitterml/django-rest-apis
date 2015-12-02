@@ -184,6 +184,7 @@ def media(request, type, examples, template):
         
     status = request.REQUEST.get("status", None)
     media_type = request.REQUEST.get("media_type", None)
+    upload_url = '%s/media/upload.json' % api.upload_url
 
     form = ImageForm(request.POST, request.FILES)
     if form.is_valid():
@@ -193,32 +194,67 @@ def media(request, type, examples, template):
         image = Image(file = file)
         image.save()
         
-        url = '%s/media/upload.json' % api.upload_url
+        media_id = None
         
-        contents = open(str(image.file.path), 'rb').read()
-        data = {}
-        
-        if media_type == "binary":
+        # INIT
+        if type == "video":
+            data = {
+                "command": "INIT", 
+                "media_type": "video/mp4", 
+                "total_bytes": image.file.size
+            }
             
-            # using 'media' parameter (binary)
-            data['media'] = contents
+            print "INIT", data
+            json_data = api._RequestUrl(upload_url, 'POST', data=data)
+            print "INIT (Resp)", json_data.content
+            
+            json_data = json.loads(json_data.content)
+            media_id = json_data["media_id_string"]
 
-        else:
-            
-            # using 'media_data' parameter (base64)
+        # APPEND
+        data = {}
+        if type == "video":
+            data["command"] = "APPEND"
+            data["media_id"] = media_id
+            data["segment_index"] = 0
+             
+        contents = open(str(image.file.path), 'rb').read()
+        if media_type == "binary":  # using 'media' parameter (binary)
+            data['media'] = contents
+        else:                       # using 'media_data' parameter (base64)
             import base64
             contents = base64.b64encode(contents)
             data['media_data'] = contents
-        
-        json_data = api._RequestUrl(url, 'POST', data=data)
-        response['media'] = json.loads(json_data.content)
-        
-        if not 'error' in response['media'] and not 'errors' in response['media']:
             
-            response_media = api._ParseAndCheckTwitter(json_data.content)
-            response['media'] = response_media
+        print "APPEND", data
+        json_data = api._RequestUrl(upload_url, 'POST', data=data)
+        print "APPEND (Resp)", json_data.content
+        
+        if type != "video":
             
-            media_id = response_media['media_id_string']
+            response['media'] = json_data.content
+
+            if not 'error' in response['media'] and not 'errors' in response['media']:
+                
+                response_media = api._ParseAndCheckTwitter(json_data.content)
+                media_id = response_media['media_id_string']
+            
+        # FINALIZE
+        if type == "video":
+            data = {
+                "command": "FINALIZE", 
+                "media_id" : media_id
+            }
+            
+            print "FINALIZE", data
+            json_data = api._RequestUrl(upload_url, 'POST', data=data)
+            print "FINALIZE (Resp)", json_data.content
+
+            json_data = json.loads(json_data.content)
+
+        
+        # this is wrong, based on photo vs. video
+        if media_id:
             
             data = {'status': status, 'media_ids': [media_id]}
     
