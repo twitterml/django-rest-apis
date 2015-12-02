@@ -134,9 +134,9 @@ response = api._RequestUrl(url, 'POST', data=data)
     response = {}
         
     status = request.REQUEST.get("status", None)
+    media_type = request.REQUEST.get("media_type", None)
 
     form = ImageForm(request.POST, request.FILES)
-    print "valid: %s (%s)" % (form.is_valid(), form.errors)
     if form.is_valid():
         file = request.FILES['file']
         
@@ -146,8 +146,20 @@ response = api._RequestUrl(url, 'POST', data=data)
         
         url = '%s/media/upload.json' % api.upload_url
         
+        contents = open(str(image.file.path), 'rb').read()
         data = {}
-        data['media'] = open(str(image.file.path), 'rb').read()
+        
+        if media_type == "binary":
+            
+            # using 'media' parameter (binary)
+            data['media'] = contents
+
+        else:
+            
+            # using 'media_data' parameter (base64)
+            import base64
+            contents = base64.b64encode(contents)
+            data['media_data'] = contents
         
         json_data = api._RequestUrl(url, 'POST', data=data)
         response_media = api._ParseAndCheckTwitter(json_data.content)
@@ -190,7 +202,6 @@ api.UpdateImage("/path/to/file")
     response = None
         
     form = ImageForm(request.POST, request.FILES)
-    print "valid: %s (%s)" % (form.is_valid(), form.errors)
     if form.is_valid():
         file = request.FILES['file']
         
