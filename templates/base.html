@@ -24,7 +24,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li {% if request.get_full_path = "/tweet" %}class="active"{% endif %}><a href="/tweet">Post a tweet</a></li>
-        <li {% if request.get_full_path = "/query" %}class="active"{% endif %}><a href="/query">Query tweet</a></li>
+        <li {% if request.get_full_path = "/query" %}class="active"{% endif %}><a href="/query">Query tweets</a></li>
         <li {% if request.get_full_path = "/media" %}class="active"{% endif %}><a href="/media">Upload media</a></li>
         <li {% if request.get_full_path = "/profile" %}class="active"{% endif %}><a href="/profile">Update profile photo</a></li>
       </ul>
