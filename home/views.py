@@ -196,14 +196,15 @@ def media(request, type, examples, template):
         
         media_id = None
         
-        # INIT
         if type == "video":
-            
-            media_id = media_upload_chunked(upload_url, image)
+            result = media_upload_chunked(api, upload_url, image, media_type)
+            response["media"] = result.get("upload", None)
+            media_id = result.get("media_id", None)
             
         else:
-            
-            media_id = media_upload(upload_url, image)
+            result = media_upload(api, upload_url, image, media_type)
+            response["media"] = result.get("upload", None)
+            media_id = result.get("media_id", None)
         
         # this is wrong, based on photo vs. video
         if media_id:
@@ -219,7 +220,7 @@ def media(request, type, examples, template):
     context = {'request': request, 'examples': examples, 'form': form, 'response': response}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
-def media_upload(file):
+def media_upload(api, upload_url, image, media_type=None):
 
     media_id = None
     data = {}
@@ -237,68 +238,75 @@ def media_upload(file):
         data['media_data'] = contents
         
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
-               
-    response['media'] = json_data.content
+    json_data = json_data.content
 
-    if not 'error' in response['media'] and not 'errors' in response['media']:
+    if not 'error' in json_data and not 'errors' in json_data:
         
-        response_media = api._ParseAndCheckTwitter(json_data.content)
-        media_id = response_media['media_id_string']
+        response = api._ParseAndCheckTwitter(json_data)
+        media_id = response['media_id_string']
 
-    return media_id
+    result = {
+        "media_id": media_id,
+        "upload": json_data
+    }
+    return result
     
-def media_upload_chunked(file):
+def media_upload_chunked(api, upload_url, image, media_type=None):
+
+    # INIT
+    data = {
+        "command": "INIT", 
+        "media_type": "video/mp4", 
+        "total_bytes": image.file.size
+    }
     
-        # INIT
-        data = {
-            "command": "INIT", 
-            "media_type": "video/mp4", 
-            "total_bytes": image.file.size
-        }
-        
-        print "INIT", data
-        json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        print "INIT (Resp %s)" % json_data.status_code, json_data.content
-        
-        json_data = json.loads(json_data.content)
-        media_id = json_data["media_id_string"]
+    print "INIT", data
+    json_data = api._RequestUrl(upload_url, 'POST', data=data)
+    print "INIT (Resp %s)" % json_data.status_code, json_data.content
+    
+    json_data = json.loads(json_data.content)
+    media_id = json_data["media_id_string"]
 
-        # APPEND
-        data = {
-            "command": "APPEND",
-            "media_id": media_id,
-            "segment_index": 0
-        }
-             
-        contents = open(str(image.file.path), 'rb').read()
+    # APPEND
+    data = {
+        "command": "APPEND",
+        "media_id": media_id,
+        "segment_index": 0
+    }
+         
+    contents = open(str(image.file.path), 'rb').read()
+    
+    # using 'media' parameter (binary)
+    if media_type == "binary":  
+        data['media'] = contents
         
-        # using 'media' parameter (binary)
-        if media_type == "binary":  
-            data['media'] = contents
-            
-        # using 'media_data' parameter (base64)
-        else:                       
-            import base64
-            contents = base64.b64encode(contents)
-            data['media_data'] = contents
-            
-        print "APPEND", data
-        json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        print "APPEND (Resp %s)" % json_data.status_code, json_data.content
+    # using 'media_data' parameter (base64)
+    else:                       
+        import base64
+        contents = base64.b64encode(contents)
+        data['media_data'] = contents
         
-        # FINALIZE
-        data = {
-            "command": "FINALIZE", 
-            "media_id" : media_id
-        }
-        
-        print "FINALIZE", data
-        json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        print "FINALIZE (Resp %s)" % json_data.status_code, json_data.content
+    print "APPEND", data
+    json_data = api._RequestUrl(upload_url, 'POST', data=data)
+    print "APPEND (Resp %s)" % json_data.status_code, json_data.content
+    
+    # FINALIZE
+    data = {
+        "command": "FINALIZE", 
+        "media_id" : media_id
+    }
+    
+    print "FINALIZE", data
+    json_data = api._RequestUrl(upload_url, 'POST', data=data)
+    print "FINALIZE (Resp %s)" % json_data.status_code, json_data.content
 
-        json_data = json.loads(json_data.content)    
+    json_data = json.loads(json_data.content)    
         
-        return media_id
+    result = {
+        "media_id": media_id,
+        "upload": json_data
+    }
+    return result
 
 @login_required
 def profile(request):
