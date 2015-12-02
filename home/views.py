@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
+
 import twitter
+from twitter import TwitterError
 
 from home.models import Image 
 
@@ -249,6 +251,7 @@ def media_upload(api, upload_url, image, media_type=None):
         "media_id": media_id,
         "upload": json_data
     }
+    
     return result
     
 def media_upload_chunked(api, upload_url, image, media_type=None):
@@ -286,21 +289,31 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         contents = base64.b64encode(contents)
         data['media_data'] = contents
         
-    print "APPEND", data
-    json_data = api._RequestUrl(upload_url, 'POST', data=data)
-    print "APPEND (Resp %s)" % json_data.status_code, json_data.content
-    
-    # FINALIZE
-    data = {
-        "command": "FINALIZE", 
-        "media_id" : media_id
-    }
-    
-    print "FINALIZE", data
-    json_data = api._RequestUrl(upload_url, 'POST', data=data)
-    print "FINALIZE (Resp %s)" % json_data.status_code, json_data.content
+    try:
+        print "APPEND", data
+        json_data = api._RequestUrl(upload_url, 'POST', data=data)
+        print "APPEND (Resp %s)" % json_data.status_code, json_data.content
+        
+        # FINALIZE
+        data = {
+            "command": "FINALIZE", 
+            "media_id" : media_id
+        }
+        
+        print "FINALIZE", data
+        json_data = api._RequestUrl(upload_url, 'POST', data=data)
+        print "FINALIZE (Resp %s)" % json_data.status_code, json_data.content
 
-    json_data = json.loads(json_data.content)    
+        if json_data.status_code == 400:
+            media_id = None
+
+        json_data = json.loads(json_data.content)   
+        
+    except TwitterError as e:
+                
+        media_id = None
+        json_data = e.args
+ 
         
     result = {
         "media_id": media_id,
