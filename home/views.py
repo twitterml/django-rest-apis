@@ -107,8 +107,8 @@ statuses = api.GetUserTimeline(screen_name='%s', count=200)
     return render_to_response('query.html', context, context_instance=RequestContext(request))
 
 @login_required
-def media(request):
-    
+def media_photo(request):
+
     examples = {}
     examples["twurl"] = "twurl -H upload.twitter.com \"/1.1/media/upload.json\" -f /path/to/file -F media -X POST"
     examples["python"] = """
@@ -130,6 +130,37 @@ data['media'] = open(str("/path/to/file"), 'rb').read()
 response = api._RequestUrl(url, 'POST', data=data)
 
 """
+    return media(request, "photo", examples, 'media_photo.html')
+
+@login_required
+def media_video(request):
+
+    examples = {}
+    examples["twurl"] = "twurl -H upload.twitter.com \"/1.1/media/upload.json\" -f /path/to/file -F media -X POST"
+    examples["python"] = """
+
+import twitter
+
+api = twitter.Api(
+    base_url='https://api.twitter.com/1.1',
+    consumer_key='YOUR_CONSUMER_KEY',
+    consumer_secret='YOUR_CONSUMER_SECRET',
+    access_token_key='YOUR_ACCESS_KEY',
+    access_token_secret='YOUR_ACCESS_SECRET')
+    
+url = '%s/media/upload.json' % api.upload_url
+
+data = {}
+data['media'] = open(str("/path/to/file"), 'rb').read()
+
+response = api._RequestUrl(url, 'POST', data=data)
+
+"""
+
+    return media(request, "video", examples, 'media_video.html')
+
+@login_required
+def media(request, type, examples, template):
     
     api = get_twitter(request.user)
     response = {}
@@ -181,7 +212,7 @@ response = api._RequestUrl(url, 'POST', data=data)
             response['tweet'] = data
 
     context = {'request': request, 'examples': examples, 'form': form, 'response': response}
-    return render_to_response('media.html', context, context_instance=RequestContext(request))
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 @login_required
 def profile(request):
