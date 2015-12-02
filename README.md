@@ -1,4 +1,4 @@
-Twitter Sign In and REST APIs
+Twitter REST API Samples
 =================
 
 Sample Django App using Twitter Sign in (OAuth) and REST APIs. This is the basis for many
