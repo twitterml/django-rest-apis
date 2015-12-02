@@ -4,7 +4,7 @@ from fabric.api import *
 from fabric.contrib import django
 import os
 
-SETTINGS_FILE = "app.settings"
+SETTINGS_FILE = "app.settings_my"
 django.settings_module(SETTINGS_FILE)
 PORT = os.environ.get('PORT', 9000)
 

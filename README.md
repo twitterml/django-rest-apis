@@ -36,10 +36,7 @@ Getting Started
 
 - In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
 
-- Specify your database settings in app/settings.py. Be sure to uncomment the section for using a local database.
-  (The default is set to easily deploy to Heroku.) 
-
-- Specify your Twitter App tokens in app/settings.py:
+- Specify your Twitter API credentials in app/settings_my.py under the following section:
 
     SOCIAL_AUTH_TWITTER_KEY = ''
     
@@ -48,10 +45,14 @@ Getting Started
     TWITTER_ACCESS_TOKEN = ''
     
     TWITTER_ACCESS_TOKEN_SECRET = ''
-
+    	
 - To initialize your database, run the from the `django-rest-apis` directory:
 
-  `python manage.py syncdb`
+  `python manage.py syncdb --settings=app.settings_my`
+  
+  Then run:
+  
+  `python manage.py migrate --settings=app.settings_my`
 
 - To start the server, run the following from the `django-rest-apis` directory:
 
@@ -62,7 +63,7 @@ Getting Started
 Deploying to Heroku
 ============
 
-Deploying to Heroku is even easier.  
+Deploying to Heroku is even easier. The defaults in settings.py are pre-configured  to easily deploy to Heroku.
 
 - Create a Twitter App (https://apps.twitter.com/)
 - Click on the Heroku button below
