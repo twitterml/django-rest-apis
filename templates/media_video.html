@@ -26,13 +26,14 @@ Learn more about uploading videos on Twitter by reading the
 <p>Below are a number of common errors and issues when uploading media, and suggestions on how to resolve them.</p>
 
 <ul>
-<li><code>Invalid or unsupported media, Reason: UnsupportedMedia.</code> Format of the file does is not supported. We support XXX
+<li><code>Invalid or unsupported media, Reason: UnsupportedMedia.</code> Format of the file does is not supported.The  <a href="https://dev.twitter.com/rest/public/uploading-media#videorecs" target="_target">video specifications
+and recommendations page</a> offers criteria for file uploads.
 <li><code>Segments do not add up to provided total file size.</code> Either the INIT command specified the wrong initial size, 
 or the sum of the sizes of the chunks do not match the initial size. Alternatively, the chunks are not < 5MB each.
-<!--
-<li><code>media type unrecognized.</code> May indicate you're using the non-chunked version of the media/upload API.
+<li><code>media type unrecognized.</code> Indicate you're using the non-chunked version of the media/upload API, or the media is unsupported.
 <li><code>checkVideoProcessingStatus called on a sync upload or an expired request.</code> The media is still being processed.
 Try again later to confirm media is fully processed.
+<!--
 <li><code></code> TBD
 -->
 </ul>
