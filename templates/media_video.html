@@ -30,8 +30,9 @@ Learn more about uploading videos on Twitter by reading the
 <li><code>Segments do not add up to provided total file size.</code> Either the INIT command specified the wrong initial size, 
 or the sum of the sizes of the chunks do not match the initial size. Alternatively, the chunks are not < 5MB each.
 <!--
-<li><code>media type unrecognized.</code> TBD
-<li><code></code> TBD
+<li><code>media type unrecognized.</code> May indicate you're using the non-chunked version of the media/upload API.
+<li><code>checkVideoProcessingStatus called on a sync upload or an expired request.</code> The media is still being processed.
+Try again later to confirm media is fully processed.
 <li><code></code> TBD
 -->
 </ul>
