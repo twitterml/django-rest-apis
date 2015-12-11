@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Post a tweet{% endblock %}
+{% block title %}Post a Tweet{% endblock %}
 
 {% block content %}
 
-<h2>Post a tweet</h2>
+<h2>Post a Tweet</h2>
 
-<p>This page shows how to post a tweet.
+<p>This page shows how to post a Tweet.
 Learn more about posting tweets on Twitter by reading the 
 <a href="https://dev.twitter.com/rest/reference/post/statuses/update" target="_target">POST statuses/update</a> documentation.</p>  
 </p>
@@ -30,12 +30,25 @@ Learn more about posting tweets on Twitter by reading the
       <button type="submit" class="btn btn-primary">Tweet</button>
     </div>
   </div>
+
   {% if response %}
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Response</label>
     <div class="col-sm-8">
       <pre>{{response}}</pre>
     </div>
+  </div>
+  <div class="form-group">
+    <label for="response-collapsible" class="col-sm-2 control-label">Response (Formatted)</label>
+    <div class="col-sm-8" id="response-collapsible"></div>
+    <script>
+      renderjson.set_show_to_level(1);
+      document.getElementById("response-collapsible1").appendChild(
+        {% autoescape off %} 
+          renderjson({{response_pretty}})
+        {% endautoescape %} 
+      );
+    </script>
   </div>
   {% endif %}
 </form>

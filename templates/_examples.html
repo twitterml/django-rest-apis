@@ -5,6 +5,9 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#example_python" aria-controls="example_python" role="tab" data-toggle="tab">Python</a></li>
     <li role="presentation"><a href="#example_twurl" aria-controls="example_twurl" role="tab" data-toggle="tab">Twurl</a></li>
+    <li role="presentation"><a href="#example_nodejs" aria-controls="example_nodejs" role="tab" data-toggle="tab">Node.js</a></li>
+    <li role="presentation"><a href="#example_ruby" aria-controls="example_ruby" role="tab" data-toggle="tab">Ruby</a></li>
+    <li role="presentation"><a href="#example_java" aria-controls="example_java" role="tab" data-toggle="tab">Java</a></li>
   </ul>
 
 <br>
@@ -12,15 +15,36 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="example_python">
-    
-<pre>{{examples.python}}</pre>
+      
+      <i>Uses <a href="https://github.com/bear/python-twitter">python-twitter</a></i>
+      <pre>{{examples.python}}</pre>
     
     </div>
     <div role="tabpanel" class="tab-pane" id="example_twurl">
 
-<h5>Request</h5>
-<pre>{{examples.twurl}}</pre>
+      <i>Uses <a href="https://github.com/twitter/twurl">twurl</a> (Twitter command line tool)</i>
+      <pre>{{examples.twurl}}</pre>
     
+    </div>
+    <div role="tabpanel" class="tab-pane" id="example_nodejs">
+
+    <i>Uses <a href="https://github.com/ttezel/twit">twit</a></i>
+      <pre>{{examples.nodejs}}</pre>
+    
+    </div>
+    <div role="tabpanel" class="tab-pane" id="example_ruby">
+      
+      <i>Uses <a href="https://rubygems.org/gems/twitter">twitter gem</a></i>
+      <pre>{{examples.ruby}}</pre>
+    
+    </div>
+    <div role="tabpanel" class="tab-pane" id="example_java">
+
+      <i>Uses <a href="https://github.com/yusuke/twitter4j/">Twitter4J</a></i>
+      {% autoescape off %} 
+          {{examples.java}}
+      {% endautoescape %} 
+      
     </div>
   </div>
 
