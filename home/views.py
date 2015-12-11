@@ -36,9 +36,8 @@ def home(request):
 def tweet(request):
 
     examples = {}
-    examples["twurl"] = "twurl -d 'status=This is a test tweet' /1.1/statuses/update.json"
+    examples["twurl"] = "twurl -d 'status=This is a test Tweet' /1.1/statuses/update.json"
     examples["python"] = """
-
 import twitter
 
 api = twitter.Api(
@@ -48,8 +47,34 @@ api = twitter.Api(
     access_token_key='YOUR_ACCESS_KEY',
     access_token_secret='YOUR_ACCESS_SECRET')
     
-api.PostUpdates("This is a test tweet")
+api.PostUpdates("This is a test Tweet")
+"""
+    examples["nodejs"] = """
+var Twit = require('twit')
 
+var T = new Twit({
+    consumer_key:         'YOUR_CONSUMER_KEY'
+  , consumer_secret:      'YOUR_CONSUMER_SECRET'
+  , access_token:         'YOUR_ACCESS_KEY'
+  , access_token_secret:  'YOUR_ACCESS_SECRET'
+})
+
+T.post('statuses/update', { status: 'This is a test Tweet' }, function(err, data, response) {
+  console.log(data)
+})
+"""
+    examples["ruby"] = """
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = "YOUR_CONSUMER_KEY"
+  config.consumer_secret     = "YOUR_CONSUMER_SECRET"
+  config.access_token        = "YOUR_ACCESS_TOKEN"
+  config.access_token_secret = "YOUR_ACCESS_SECRET"
+end
+
+client.update("This is a test Tweet")
+"""
+    examples["java"] = """
+<script src="https://gist-it.appspot.com/github/yusuke/twitter4j/blob/master/twitter4j-examples/src/main/java/twitter4j/examples/tweets/UpdateStatus.java"></script>
 """
 
     status = request.REQUEST.get("status", None)
@@ -60,7 +85,7 @@ api.PostUpdates("This is a test tweet")
     if status:
         response = api.PostUpdates(status)[0].AsDict()
 
-    context = {'request': request, 'examples': examples, 'response': response }
+    context = {'request': request, 'examples': examples, 'response': response, 'response_pretty': json.dumps(response) }
     return render_to_response('tweet.html', context, context_instance=RequestContext(request))
 
 @login_required
@@ -73,7 +98,6 @@ def query(request):
     examples = {}
     examples["twurl"] = "twurl -d 'screen_name=%s' /1.1/statuses/home_timeline.json" % (screen_name)
     examples["python"] = """
-
 import twitter
 
 api = twitter.Api(
@@ -84,8 +108,34 @@ api = twitter.Api(
     access_token_secret='YOUR_ACCESS_SECRET')
     
 statuses = api.GetUserTimeline(screen_name='%s', count=200)
-
 """ % (screen_name)
+    examples["nodejs"] = """
+var Twit = require('twit')
+
+var T = new Twit({
+    consumer_key:         'YOUR_CONSUMER_KEY'
+  , consumer_secret:      'YOUR_CONSUMER_SECRET'
+  , access_token:         'YOUR_ACCESS_KEY'
+  , access_token_secret:  'YOUR_ACCESS_SECRET'
+})
+
+T.get('statuses/user_timeline', { screen_name: '%s', count: 200 },  function (err, data, response) {
+  console.log(data)
+})
+""" % (screen_name)
+    examples["ruby"] = """
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = "YOUR_CONSUMER_KEY"
+  config.consumer_secret     = "YOUR_CONSUMER_SECRET"
+  config.access_token        = "YOUR_ACCESS_TOKEN"
+  config.access_token_secret = "YOUR_ACCESS_SECRET"
+end
+
+client.user_timeline("%s", {count: 200})
+""" % (screen_name)
+    examples["java"] = """
+<script src="https://gist-it.appspot.com/github/yusuke/twitter4j/blob/master/twitter4j-examples/src/main/java/twitter4j/examples/timeline/GetUserTimeline.java"></script>
+"""
     
     api = get_twitter(request.user)
         
@@ -134,6 +184,8 @@ data['media'] = open(str("/path/to/file"), 'rb').read()
 response = api._RequestUrl(url, 'POST', data=data)
 
 """
+    examples["nodejs"] = ""
+
     return media(request, "photo", examples, 'media_photo.html')
 
 @login_required
@@ -165,6 +217,7 @@ View the code on Github to see how the chunking and media/upload endpoint works:
 https://github.com/twitterdev/django-rest-apis/blob/master/home/views.py
 
 """
+    examples["nodejs"] = ""
 
     return media(request, "video", examples, 'media_video.html')
 

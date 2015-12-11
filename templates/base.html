@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/renderjson.js"></script>
 </HEAD>
 <body>
 
@@ -27,8 +28,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li {% if request.get_full_path = "/tweet" %}class="active"{% endif %}><a href="/tweet">Post a tweet</a></li>
-        <li {% if request.get_full_path = "/query" %}class="active"{% endif %}><a href="/query">Query tweets</a></li>
+        <li {% if request.get_full_path = "/tweet" %}class="active"{% endif %}><a href="/tweet">Post a Tweet</a></li>
+        <li {% if request.get_full_path = "/query" %}class="active"{% endif %}><a href="/query">Query Tweets</a></li>
         <li {% if request.get_full_path = "/media/photo" %}class="active"{% endif %}><a href="/media/photo">Upload photo</a></li>
         <li {% if request.get_full_path = "/media/video" %}class="active"{% endif %}><a href="/media/video">Upload video</a></li>
         <li {% if request.get_full_path = "/profile" %}class="active"{% endif %}><a href="/profile">Update profile photo</a></li>
