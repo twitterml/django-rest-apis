@@ -2,6 +2,6 @@
 .project
 .pydevproject
 app/settings_my.py
-media*
+/media/*
 fabfile.py
 db.sqlite3

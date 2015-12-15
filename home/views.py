@@ -415,10 +415,11 @@ def media_inspector(request):
         #print video_metadata
 
         # ffprobe
-        video_info = ffprobe(image.file.path)
-        print json.dumps(video_info, indent=4)
+        if ffprobe_exists:
+            video_info = ffprobe(image.file.path)
+            print json.dumps(video_info, indent=4)
 
-    context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata }
+    context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata, 'ffprobe_exists': ffprobe_exists }
     return render_to_response('media_inspector.html', context, context_instance=RequestContext(request))
 
 # used check if ffprobe exists
