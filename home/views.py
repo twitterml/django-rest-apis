@@ -184,7 +184,31 @@ data['media'] = open(str("/path/to/file"), 'rb').read()
 response = api._RequestUrl(url, 'POST', data=data)
 
 """
-    examples["nodejs"] = ""
+    examples["nodejs"] = """
+var Twit = require('twit')
+var fs = require('fs')
+
+var T = new Twit({
+    consumer_key:         'YOUR_CONSUMER_KEY'
+  , consumer_secret:      'YOUR_CONSUMER_SECRET'
+  , access_token:         'YOUR_ACCESS_KEY'
+  , access_token_secret:  'YOUR_ACCESS_SECRET'
+})
+
+var b64content = fs.readFileSync('/path/to/img', { encoding: 'base64' })
+
+// first we must post the media to Twitter
+T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+
+  // now we can reference the media and post a tweet (media will attach to the tweet)
+  var mediaIdStr = data.media_id_string
+  var params = { status: 'Tweet with a photo!', media_ids: [mediaIdStr] }
+
+  T.post('statuses/update', params, function (err, data, response) {
+    console.log(data)
+  })
+})
+"""
 
     return media(request, "photo", examples, 'media_photo.html')
 
@@ -306,6 +330,10 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
 
     import base64
 
+    #ffprobe check (TODO: Add this to return or only use in standalone tool?)
+    #video_info = ffprobe(image.file.path)
+    #print json.dumps(video_info, indent=4)
+
     contents = open(str(image.file.path), 'rb').read()
     contents = base64.b64encode(contents)
 
@@ -362,6 +390,81 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         "upload": json_data
     }
     return result
+
+@login_required
+def media_inspector(request):
+
+    video_info = {}
+    video_metadata = None
+    ffprobe_exists = True
+
+    if which('ffprobe') == None:
+        ffprobe_exists = False
+    # TODO: use this flag in view to add instructions to install ffprobe
+
+    form = ImageForm(request.POST, request.FILES)
+    if form.is_valid():
+        file = request.FILES['file']
+        
+        # save to file
+        image = Image(file = file)
+        image.save()
+
+        # metadata of file        
+        #video_metadata = get_metadata(image.file.path) 
+        #print video_metadata
+
+        # ffprobe
+        video_info = ffprobe(image.file.path)
+        print json.dumps(video_info, indent=4)
+
+    context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata }
+    return render_to_response('media_inspector.html', context, context_instance=RequestContext(request))
+
+# used check if ffprobe exists
+def which(program):
+    import os
+
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+    return None
+
+def ffprobe(file_path):
+    import os
+    import subprocess
+
+    if file_path is None:
+        return json.loads("{ 'error': 'no file path'}")
+
+    # check if ffprobe exists
+    if which('ffprobe') == None:
+        return json.loads("{ 'error': 'ffprobe not installed'}")
+
+    # check if input file exists
+    if not os.path.isfile(file_path):
+        return json.loads("{ 'error': 'input file does not exist'}")
+
+    # run ffprobe and get output
+    p = subprocess.Popen(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_path ],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    if err:
+        return json.loads("{ 'error': '%s'}" % err)
+
+    # read output and get the packets info
+    return json.loads(out)
 
 @login_required
 def profile(request):

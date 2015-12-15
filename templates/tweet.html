@@ -33,17 +33,17 @@ Learn more about posting tweets on Twitter by reading the
 
   {% if response %}
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Response</label>
+    <label for="inputEmail3" class="col-sm-2 control-label">Raw Response</label>
     <div class="col-sm-8">
       <pre>{{response}}</pre>
     </div>
   </div>
   <div class="form-group">
-    <label for="response-collapsible" class="col-sm-2 control-label">Response (Formatted)</label>
+    <label for="response-collapsible" class="col-sm-2 control-label">Formatted Response</label>
     <div class="col-sm-8" id="response-collapsible"></div>
     <script>
       renderjson.set_show_to_level(1);
-      document.getElementById("response-collapsible1").appendChild(
+      document.getElementById("response-collapsible").appendChild(
         {% autoescape off %} 
           renderjson({{response_pretty}})
         {% endautoescape %} 
