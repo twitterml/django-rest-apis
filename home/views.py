@@ -460,7 +460,8 @@ def ffprobe(file_path):
         return json.loads("{ 'error': 'no file path'}")
 
     # check if ffprobe exists
-    if which('ffprobe') == None:
+    ffprobe_path = which('ffprobe')
+    if ffprobe_path == None:
         return json.loads("{ 'error': 'ffprobe not installed'}")
 
     # check if input file exists
@@ -468,7 +469,7 @@ def ffprobe(file_path):
         return json.loads("{ 'error': 'input file does not exist'}")
 
     # run ffprobe and get output
-    p = subprocess.Popen(['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_path ],
+    p = subprocess.Popen([ffprobe_path, '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', file_path ],
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     out, err = p.communicate()
