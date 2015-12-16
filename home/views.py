@@ -268,7 +268,6 @@ def media(request, type, examples, template):
         metadata = get_metadata(image.file.path) 
         
         media_id = None
-<<<<<<< HEAD
         
         if type == "video":
             result = media_upload_chunked(api, upload_url, image, media_type)
@@ -419,6 +418,11 @@ def media_inspector(request):
         if ffprobe_exists:
             video_info = ffprobe(image.file.path)
             print json.dumps(video_info, indent=4)
+            
+            # Add warning checks
+            for stream in video_info['streams']:
+                if stream['codec_type'] == "audio":
+                    stream['channel_layout_warning'] = (stream['channel_layout'] != "mono" and stream['channel_layout'] != "stereo")
 
     context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata, 'ffprobe_exists': ffprobe_exists }
     return render_to_response('media_inspector.html', context, context_instance=RequestContext(request))
@@ -455,193 +459,6 @@ def ffprobe(file_path):
     if file_path is None:
         return json.loads("{ 'error': 'no file path'}")
 
-=======
-        
-        if type == "video":
-            result = media_upload_chunked(api, upload_url, image, media_type)
-            response["media"] = result.get("upload", None)
-            media_id = result.get("media_id", None)
-            
-        else:
-            result = media_upload(api, upload_url, image, media_type)
-            response["media"] = result.get("upload", None)
-            media_id = result.get("media_id", None)
-        
-        # this is wrong, based on photo vs. video
-        if media_id:
-            
-            data = {'status': status, 'media_ids': [media_id]}
-    
-            url = '%s/statuses/update.json' % api.base_url
-    
-            json_data = api._RequestUrl(url, 'POST', data=data)
-            data = api._ParseAndCheckTwitter(json_data.content)
-            response['tweet'] = data
-            
-    context = {'request': request, 'examples': examples, 'form': form, 'response': response, 'metadata': metadata}
-    return render_to_response(template, context, context_instance=RequestContext(request))
-
-def media_upload(api, upload_url, image, media_type=None):
-
-    media_id = None
-    data = {}
-         
-    contents = open(str(image.file.path), 'rb').read()
-
-    # using 'media' parameter (binary)
-    if media_type == "binary":  
-        data['media'] = contents
-        
-    # using 'media_data' parameter (base64)
-    else:                       
-        import base64
-        contents = base64.b64encode(contents)
-        data['media_data'] = contents
-        
-    json_data = api._RequestUrl(upload_url, 'POST', data=data)
-    json_data = json_data.content
-
-    if not 'error' in json_data and not 'errors' in json_data:
-        
-        response = api._ParseAndCheckTwitter(json_data)
-        media_id = response['media_id_string']
-
-    result = {
-        "media_id": media_id,
-        "upload": json_data
-    }
-    
-    return result
-
-# chunked media upload always does base64 encoded uploads    
-def media_upload_chunked(api, upload_url, image, media_type=None):
-
-    import base64
-
-    #ffprobe check (TODO: Add this to return or only use in standalone tool?)
-    #video_info = ffprobe(image.file.path)
-    #print json.dumps(video_info, indent=4)
-
-    contents = open(str(image.file.path), 'rb').read()
-    contents = base64.b64encode(contents)
-
-    chunks = chunkify(contents, SIZE_5MB) 
-        
-    # INIT
-    data = {
-        "command": "INIT", 
-        "media_type": "video/mp4", 
-        "total_bytes": image.file.size
-    }
-    
-    json_data = api._RequestUrl(upload_url, 'POST', data=data)
-    json_data = json.loads(json_data.content)
-    media_id = json_data["media_id_string"]
-
-    # APPEND
-    count = 0 
-    for c in chunks:
-        
-        data = {
-            "command": "APPEND",
-            "media_id": media_id,
-            "segment_index": count,
-            "media_data": c
-        }
-             
-        try:
-            json_data = api._RequestUrl(upload_url, 'POST', data=data)
-            count = count + 1
-            
-        except TwitterError as e:
-                    
-            media_id = None
-            json_data = e.args
-            break
-
-    if media_id:
-    
-        # FINALIZE
-        data = {
-            "command": "FINALIZE", 
-            "media_id" : media_id
-        }
-        
-        json_data = api._RequestUrl(upload_url, 'POST', data=data)
-        if json_data.status_code == 400:
-            media_id = None
-
-        json_data = json.loads(json_data.content)    
-        
-    result = {
-        "media_id": media_id,
-        "upload": json_data
-    }
-    return result
-
-@login_required
-def media_inspector(request):
-
-    video_info = {}
-    video_metadata = None
-    ffprobe_exists = True
-
-    if which('ffprobe') == None:
-        ffprobe_exists = False
-    # TODO: use this flag in view to add instructions to install ffprobe
-
-    form = ImageForm(request.POST, request.FILES)
-    if form.is_valid():
-        file = request.FILES['file']
-        
-        # save to file
-        image = Image(file = file)
-        image.save()
-
-        # metadata of file        
-        #video_metadata = get_metadata(image.file.path) 
-        #print video_metadata
-
-        # ffprobe
-        if ffprobe_exists:
-            video_info = ffprobe(image.file.path)
-            print json.dumps(video_info, indent=4)
-
-            # Add warning checks
-            for stream in video_info['streams']:
-                if stream['codec_type'] == "audio":
-                    stream['channel_layout_warning'] = (stream['channel_layout'] != "mono" and stream['channel_layout'] != "stereo")
-
-    context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata, 'ffprobe_exists': ffprobe_exists }
-    return render_to_response('media_inspector.html', context, context_instance=RequestContext(request))
-
-# used check if ffprobe exists
-def which(program):
-    import os
-
-    def is_exe(fpath):
-        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
-
-    fpath, fname = os.path.split(program)
-    if fpath:
-        if is_exe(program):
-            return program
-    else:
-        for path in os.environ["PATH"].split(os.pathsep):
-            path = path.strip('"')
-            exe_file = os.path.join(path, program)
-            if is_exe(exe_file):
-                return exe_file
-    return None
-
-def ffprobe(file_path):
-    import os
-    import subprocess
-
-    if file_path is None:
-        return json.loads("{ 'error': 'no file path'}")
-
->>>>>>> cc18f18db1c546d092987549df747dd79092d572
     # check if ffprobe exists
     if which('ffprobe') == None:
         return json.loads("{ 'error': 'ffprobe not installed'}")
