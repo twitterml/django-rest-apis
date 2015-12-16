@@ -78,8 +78,15 @@ Deploying to Heroku is even easier. The defaults in settings.py are pre-configur
 
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
+Additionally, you can get the ffprobe portion of the code sample working on Heroku as well. You need to do the following:
 
+- Set the root buildpack with the following setting:
+
+	heroku buildpacks:set https://github.com/integricho/heroku-buildpack-python-ffmpeg --app your-app-name
+	
+- Rebuild & deploy the app (either via command line or via the UI)
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 
 NOTES
 ============
