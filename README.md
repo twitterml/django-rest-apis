@@ -60,6 +60,19 @@ Getting Started
   
 - Open a browser and go to http://127.0.0.1:9000
 
+Enabling the Media Inspector
+============
+
+If you install ffprobe (as part of ffmpeg) you can get debug information about your video that is useful
+for determining if your video is compatible with the Twitter Video platform. The output looks like the below:
+
+<img src="media_inspector.png" style="width: 70%;"/>
+
+When posting video issues to the Twitter Community forums, please include the output of the Media Inspector
+to help us debug/investigate issues.
+
+To enable the media inspector, visit the [ffprobe/ffmpeg documentation](https://ffmpeg.org/ffprobe.html).
+
 Deploying to Heroku
 ============
 
