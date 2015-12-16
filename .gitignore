@@ -1,7 +1,7 @@
 *.pyc
 .project
 .pydevproject
-app/settings_my.py
-/media/*
+settings_my.py
+media/*
 fabfile.py
 db.sqlite3

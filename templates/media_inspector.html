@@ -67,18 +67,21 @@
         <tr><th colspan="2">Stream ({{stream.codec_type}})</th></tr>
         <tr><td>Codec (Long)</td><td>{{stream.codec_long_name}}</td></tr>
         <tr><td>Codec (Short)</td><td>{{stream.codec_name}}</td></tr>
+        <tr><td>Profile</td><td>{{stream.profile}}</td></tr>
         <tr><td>Dimensions</td><td>{{stream.width}}x{{stream.height}}</td></tr>
         <tr><td>Bit Rate</td><td>{{stream.bit_rate}}</td></tr>
         <tr><td>Duration</td><td>{{stream.duration}}</td></tr>
-        <tr><td>Avg Frame Rate</td><td>{{stream.avg_frame_rate}}</td></tr>
+        <tr><td>Frame Rate</td><td>{{stream.r_frame_rate}}</td></tr>
       </table>
       {% elif stream.codec_type == 'audio' %}
       <table class="table table-condensed">
         <tr><th colspan="2">Stream ({{stream.codec_type}})</th></tr>
         <tr><td>Codec (Long)</td><td>{{stream.codec_long_name}}</td></tr>
         <tr><td>Codec (Short)</td><td>{{stream.codec_name}}</td></tr>
+        <tr><td>Profile</td><td>{{stream.profile}}</td></tr>
         <tr><td>Bit Rate</td><td>{{stream.bit_rate}}</td></tr>
         <tr><td>Duration</td><td>{{stream.duration}}</td></tr>
+        <tr{% if stream.channel_layout_warning %} class="alert-danger"{% endif %}><td>Channel Layout</td><td>{{stream.channel_layout}}</td></tr>
         <tr><td>Sample Rate</td><td>{{stream.sample_rate}}</td></tr>
       </table>
       {% else %}

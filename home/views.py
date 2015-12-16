@@ -419,6 +419,11 @@ def media_inspector(request):
             video_info = ffprobe(image.file.path)
             print json.dumps(video_info, indent=4)
 
+            # Add warning checks
+            for stream in video_info['streams']:
+                if stream['codec_type'] == "audio":
+                    stream['channel_layout_warning'] = (stream['channel_layout'] != "mono" and stream['channel_layout'] != "stereo")
+
     context = {'request': request, 'form': form, 'video_info': video_info, 'video_info_pretty': json.dumps(video_info), 'video_metadata': video_metadata, 'ffprobe_exists': ffprobe_exists }
     return render_to_response('media_inspector.html', context, context_instance=RequestContext(request))
 
