@@ -254,6 +254,7 @@ def media(request, type, examples, template):
         
     status = request.REQUEST.get("status", None)
     media_type = request.REQUEST.get("media_type", None)
+    media_category = request.REQUEST.get("media_category", None)
     upload_url = '%s/media/upload.json' % api.upload_url
 
     form = ImageForm(request.POST, request.FILES)
@@ -270,7 +271,7 @@ def media(request, type, examples, template):
         media_id = None
         
         if type == "video":
-            result = media_upload_chunked(api, upload_url, image, media_type)
+            result = media_upload_chunked(api, upload_url, image, media_type, media_category)
             response["media"] = result.get("upload", None)
             media_id = result.get("media_id", None)
             
@@ -326,7 +327,7 @@ def media_upload(api, upload_url, image, media_type=None):
     return result
 
 # chunked media upload always does base64 encoded uploads    
-def media_upload_chunked(api, upload_url, image, media_type=None):
+def media_upload_chunked(api, upload_url, image, media_type=None, media_category=None):
 
     import base64
 
@@ -346,30 +347,35 @@ def media_upload_chunked(api, upload_url, image, media_type=None):
         "total_bytes": image.file.size
     }
     
+    if media_category:
+        data["media_category"] = media_category
+    
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
     json_data = json.loads(json_data.content)
-    media_id = json_data["media_id_string"]
+    media_id = json_data.get("media_id_string", None)
 
-    # APPEND
-    count = 0 
-    for c in chunks:
+    if media_id:
         
-        data = {
-            "command": "APPEND",
-            "media_id": media_id,
-            "segment_index": count,
-            "media_data": c
-        }
-             
-        try:
-            json_data = api._RequestUrl(upload_url, 'POST', data=data)
-            count = count + 1
+        # APPEND
+        count = 0 
+        for c in chunks:
             
-        except TwitterError as e:
-                    
-            media_id = None
-            json_data = e.args
-            break
+            data = {
+                "command": "APPEND",
+                "media_id": media_id,
+                "segment_index": count,
+                "media_data": c
+            }
+                 
+            try:
+                json_data = api._RequestUrl(upload_url, 'POST', data=data)
+                count = count + 1
+                
+            except TwitterError as e:
+                        
+                media_id = None
+                json_data = e.args
+                break
 
     if media_id:
     
