@@ -36,6 +36,10 @@ Getting Started
 
 - In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
 
+- In the settings.py or settings_my.py, set the following to your own key:
+
+    SECRET_KEY = 'YOUR_SECRET_KEY'
+
 - Specify your Twitter API credentials in app/settings_my.py under the following section:
 
     SOCIAL_AUTH_TWITTER_KEY = ''
