@@ -4,6 +4,8 @@ gunicorn==19.1.1
 psycopg2==2.5.1
 python-social-auth
 python-twitter==2.2
+django-csp==2.0.3
+django-secure==1.0.1
 South==1.0.2
 Fabric==1.7.0
 hachoir-core
