@@ -133,7 +133,7 @@ CSP_IMG_SRC = ("'self'", 'www.google-analytics.com', )
 CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", 'www.google-analytics.com', 'ajax.googleapis.com', 'maxcdn.bootstrapcdn.com', )
 CSP_FRAME_SRC = ("'self'", )
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'maxcdn.bootstrapcdn.com', )
-CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com', )
+CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com', 'maxcdn.bootstrapcdn.com', )
 
 SOCIAL_AUTH_LOGIN_URL          = '/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
