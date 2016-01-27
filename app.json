@@ -10,6 +10,11 @@
 		"skeleton"
 	],
 	"env":{
+		"BUILDPACK_URL": {
+			"description":"Buildpack with ffmpeg installed",
+			"value":"https://github.com/shunjikonishi/heroku-buildpack-ffmpeg",
+			"required":true
+		},
 		"DJANGO_SECRET_KEY":{
 			"description":"A randomly generated secret to secure your Django installation",
 			"generator":"secret"
