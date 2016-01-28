@@ -77,7 +77,7 @@ client.update("This is a test Tweet")
 <script src="https://gist-it.appspot.com/github/yusuke/twitter4j/blob/master/twitter4j-examples/src/main/java/twitter4j/examples/tweets/UpdateStatus.java"></script>
 """
 
-    status = request.REQUEST.get("status", None)
+    status = request.POST.get("status", None)
     
     api = get_twitter(request.user)
     response = None
@@ -91,7 +91,7 @@ client.update("This is a test Tweet")
 @login_required
 def query(request):
     
-    screen_name = request.REQUEST.get("screen_name", None)
+    screen_name = request.POST.get("screen_name", None)
     if not screen_name:
         screen_name = request.user.username
     
@@ -252,9 +252,9 @@ def media(request, type, examples, template):
     response = {}
     metadata = None
         
-    status = request.REQUEST.get("status", None)
-    media_type = request.REQUEST.get("media_type", None)
-    media_category = request.REQUEST.get("media_category", None)
+    status = request.POST.get("status", None)
+    media_type = request.POST.get("media_type", None)
+    media_category = request.POST.get("media_category", None)
     upload_url = '%s/media/upload.json' % api.upload_url
 
     form = ImageForm(request.POST, request.FILES)
