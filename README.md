@@ -52,17 +52,40 @@ Getting Started
     	
 - To initialize your database, run the from the `django-rest-apis` directory:
 
-  `python manage.py syncdb --settings=app.settings_my`
+  `python manage.py makemigrations --settings=app.settings_my`
   
   Then run:
   
   `python manage.py migrate --settings=app.settings_my`
-
+  
+- Create an admin user for the Django admin by running the following:
+  
+  `python manage.py createsuperuser --settings=app.settings_my`
+  
 - To start the server, run the following from the `django-rest-apis` directory:
 
   `fab start`
   
 - Open a browser and go to http://127.0.0.1:9000
+
+Restricting Django Admin Access
+============
+
+This code sample allows for restriction of Django admin based on IP. To enable this, do the following:
+
+- Run the migration for this as follows:
+
+  `python manage.py makemigrations adminrestrict --settings=app.settings_my` 
+  
+  Then:
+  
+  `python manage.py migrate adminrestrict --settings=app.settings_my
+
+- Log in as the Admin user and create a * record in the adminrestrict.allowed_ip table. 
+
+- Lastly, uncomment the following from the MIDDLEWARE_CLASSES section in settings.py:
+
+   `adminrestrict.middleware.AdminPagesRestrictMiddleware`
 
 Enabling the Media Inspector
 ============
