@@ -507,10 +507,14 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
     
     if media_category:
         data["media_category"] = media_category
+        
+#     print data
     
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
     json_data = json.loads(json_data.content)
     media_id = json_data.get("media_id_string", None)
+    
+#     print media_id
 
     if media_id:
         
@@ -524,10 +528,14 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
                 "segment_index": count,
                 "media_data": c
             }
+            
+#             print data
                  
             try:
                 json_data = api._RequestUrl(upload_url, 'POST', data=data)
                 count = count + 1
+                
+#                 print json_data
                 
             except TwitterError as e:
                         
@@ -543,12 +551,42 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
             "media_id" : media_id
         }
         
+#         print data
+        
         json_data = api._RequestUrl(upload_url, 'POST', data=data)
         if json_data.status_code == 400:
             media_id = None
 
-        json_data = json.loads(json_data.content)    
+        json_data = json.loads(json_data.content)
         
+#         print json_data
+        
+        # requires polling via STATUS call
+#         media_id = json_data.get('media_id', None)
+        processing_info = json_data.get('processing_info', None)
+        
+        while processing_info and processing_info.get('state', None) == 'pending':
+
+            check_after_secs = processing_info.get('check_after_secs', None)
+                
+            import time
+            time.sleep(check_after_secs)
+                
+            # STATUS
+            data = {
+                "command": "STATUS", 
+                "media_id" : media_id
+            }
+
+#             print data
+            
+            json_data = api._RequestUrl(upload_url, 'GET', data=data)
+            json_data = json.loads(json_data.content)
+
+#             print json_data
+
+            processing_info = json_data.get('processing_info', None)
+                            
     result = {
         "media_id": media_id,
         "upload": json_data
