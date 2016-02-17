@@ -164,3 +164,4 @@ Use NTP to sync time on your server to compensate for the dift.
 
 If you are getting this error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
 
+Lastly, sample video provided by [TechSlides.com](http://techslides.com/sample-webm-ogg-and-mp4-video-files-for-html5).
