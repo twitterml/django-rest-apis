@@ -406,6 +406,8 @@ https://github.com/twitterdev/django-rest-apis/blob/master/home/views.py
 @login_required
 def media(request, type, examples, template):
     
+    log = Log()
+
     api = get_twitter(request.user)
     response = {}
     metadata = None
@@ -429,30 +431,37 @@ def media(request, type, examples, template):
         media_id = None
         
         if type == "video":
-            result = media_upload_chunked(api, upload_url, image, media_type, media_category)
+            result = media_upload_chunked(api, upload_url, image, media_type, media_category, log=log)
             response["media"] = result.get("upload", None)
+            response["log"] = log.out()
             media_id = result.get("media_id", None)
             
         else:
-            result = media_upload(api, upload_url, image, media_type)
+            result = media_upload(api, upload_url, image, media_type, log=log)
             response["media"] = result.get("upload", None)
+            response["log"] = log.out()
             media_id = result.get("media_id", None)
         
         # this is wrong, based on photo vs. video
         if media_id:
             
             data = {'status': status, 'media_ids': [media_id]}
-    
+            
             url = '%s/statuses/update.json' % api.base_url
+
+            log.append("%s request: %s" % (url, data))
     
             json_data = api._RequestUrl(url, 'POST', data=data)
             data = api._ParseAndCheckTwitter(json_data.content)
+
+            log.append("%s response: %s" % (url, data))
+
             response['tweet'] = data
             
     context = {'request': request, 'examples': examples, 'form': form, 'response': response, 'metadata': metadata}
     return render_to_response(template, context, context_instance=RequestContext(request))
 
-def media_upload(api, upload_url, image, media_type=None):
+def media_upload(api, upload_url, image, media_type=None, log=None):
 
     media_id = None
     data = {}
@@ -469,8 +478,12 @@ def media_upload(api, upload_url, image, media_type=None):
         contents = base64.b64encode(contents)
         data['media_data'] = contents
         
+    log.append("%s request: %s" % (upload_url, data))
+        
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
     json_data = json_data.content
+    
+    log.append("%s response: %s" % (upload_url, json_data))
 
     if not 'error' in json_data and not 'errors' in json_data:
         
@@ -485,7 +498,7 @@ def media_upload(api, upload_url, image, media_type=None):
     return result
 
 # chunked media upload always does base64 encoded uploads    
-def media_upload_chunked(api, upload_url, image, media_type=None, media_category=None):
+def media_upload_chunked(api, upload_url, image, media_type=None, media_category=None, log=None):
 
     import base64
 
@@ -508,13 +521,13 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
     if media_category:
         data["media_category"] = media_category
         
-#     print data
+    log.append("%s INIT request: %s" % (upload_url, data))
     
     json_data = api._RequestUrl(upload_url, 'POST', data=data)
     json_data = json.loads(json_data.content)
     media_id = json_data.get("media_id_string", None)
     
-#     print media_id
+    log.append("%s INIT response: %s" % (upload_url, json_data))
 
     if media_id:
         
@@ -529,13 +542,13 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
                 "media_data": c
             }
             
-#             print data
-                 
+            log.append("%s APPEND request: segment %s" % (upload_url, count))
+
             try:
                 json_data = api._RequestUrl(upload_url, 'POST', data=data)
                 count = count + 1
                 
-#                 print json_data
+                log.append("%s APPEND response: %s" % (upload_url, json_data))
                 
             except TwitterError as e:
                         
@@ -551,7 +564,7 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
             "media_id" : media_id
         }
         
-#         print data
+        log.append("%s FINALIZE request: %s" % (upload_url, media_id))
         
         json_data = api._RequestUrl(upload_url, 'POST', data=data)
         if json_data.status_code == 400:
@@ -559,10 +572,8 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
 
         json_data = json.loads(json_data.content)
         
-#         print json_data
+        log.append("%s FINALIZE response: %s" % (upload_url, json_data))
         
-        # requires polling via STATUS call
-#         media_id = json_data.get('media_id', None)
         processing_info = json_data.get('processing_info', None)
         
         while processing_info and processing_info.get('state', None) == 'pending':
@@ -578,18 +589,19 @@ def media_upload_chunked(api, upload_url, image, media_type=None, media_category
                 "media_id" : media_id
             }
 
-#             print data
+            log.append("%s STATUS request: %s" % (upload_url, data))
             
             json_data = api._RequestUrl(upload_url, 'GET', data=data)
             json_data = json.loads(json_data.content)
 
-#             print json_data
+            log.append("%s STATUS response: %s" % (upload_url, json_data))
 
             processing_info = json_data.get('processing_info', None)
-                            
+                          
     result = {
         "media_id": media_id,
-        "upload": json_data
+        "upload": json_data,
+        "log": log.out()
     }
     return result
 
@@ -779,3 +791,16 @@ def get_metadata(filename):
 def chunkify(l, n):
     n = max(1, n)
     return [l[i:i + n] for i in range(0, len(l), n)]
+
+class Log():
+    
+    y = ""
+    
+    def append(self, x):
+        
+        self.y = self.y + "\n" + x
+        
+    def out(self):
+        
+        return self.y
+        
