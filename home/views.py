@@ -433,14 +433,14 @@ def media(request, type, examples, template):
         if type == "video":
             result = media_upload_chunked(api, upload_url, image, media_type, media_category, log=log)
             response["media"] = result.get("upload", None)
-            response["log"] = log.out()
             media_id = result.get("media_id", None)
             
         else:
             result = media_upload(api, upload_url, image, media_type, log=log)
             response["media"] = result.get("upload", None)
-            response["log"] = log.out()
             media_id = result.get("media_id", None)
+        
+        print "MEDIA WTF %s" % media_id 
         
         # this is wrong, based on photo vs. video
         if media_id:
@@ -452,11 +452,19 @@ def media(request, type, examples, template):
             log.append("%s request: %s" % (url, data))
     
             json_data = api._RequestUrl(url, 'POST', data=data)
-            data = api._ParseAndCheckTwitter(json_data.content)
+            
+            json_data = json_data.content
+            
+            log.append("%s response: %s" % (url, json_data))
 
-            log.append("%s response: %s" % (url, data))
+            data = None        
+            if not 'error' in json_data and not 'errors' in json_data:
+                
+                data = api._ParseAndCheckTwitter(json_data.content)
 
             response['tweet'] = data
+            
+        response["log"] = log.out()
             
     context = {'request': request, 'examples': examples, 'form': form, 'response': response, 'metadata': metadata}
     return render_to_response(template, context, context_instance=RequestContext(request))
