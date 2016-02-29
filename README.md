@@ -128,6 +128,18 @@ Deploying to Heroku is even easier. The defaults in settings.py are pre-configur
 	
 - After deploying, in the Twitter App config, ensure the Callback URL is `http://your-app-name.herokuapp.com/complete/twitter`
 
+- To sync the database, use the Heroku CLI and run the following:
+
+	`heroku run python manage.py migrate --app your-app-name`
+	
+- Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
+
+- To create an admin user, use the following Heroku CLI command:
+
+	`heroku run python manage.py createsuperuser --username=USERNAME --email=EMAIL --app your-app-name`
+	
+Then log in via the Admin console and update your initial Twitter login user accordingly. 
+
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
 Additionally, you can get the ffprobe portion of the code sample working on Heroku as well. You need to do the following:
