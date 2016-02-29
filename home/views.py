@@ -440,8 +440,6 @@ def media(request, type, examples, template):
             response["media"] = result.get("upload", None)
             media_id = result.get("media_id", None)
         
-        print "MEDIA WTF %s" % media_id 
-        
         # this is wrong, based on photo vs. video
         if media_id:
             
