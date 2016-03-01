@@ -36,6 +36,6 @@
 		}
 	},
 	"scripts":{
-		"postdeploy":"python manage.py makemigrations --noinput; python manage.py migrate --noinput"
+		"postdeploy":"python manage.py makemigrations home --noinput; python manage.py makemigrations --noinput; python manage.py migrate home --noinput; python manage.py migrate --noinput"
 	}
 }
