@@ -22,13 +22,30 @@ Learn more about uploading videos on Twitter by reading the
 <a href="https://dev.twitter.com/rest/public/uploading-media#chunkedupload" target="_target">uploading media guide</a> or the
 <a href="https://dev.twitter.com/rest/reference/post/media/upload-chunked" target="_target">POST media/upload (chunked)</a> documentation.</p>  
 
+<h3>Video formats</h3>
+
+<p>The most up-to-date documentation on supported video formats is located on
+our <a href="https://dev.twitter.com/rest/public/uploading-media#videorecs" target="_target">video specifications
+and recommendations page</a>. Below is a copy as of 3/1/2016.</p>
+
+<table class="table table-striped table-condensed">
+<thead><tr><th>Orientation</th><th>Width</th><th>Height</th><th>Video Bitrate</th><th>Audio Bitrate</th></tr></thead>
+<tbody>
+	<tr><td>Landscape</td><td>1280</td><td>720</td><td>2048K</td><td>128K</td></tr>
+	<tr><td>Landscape</td><td>640</td><td>360</td><td>768K</td><td>64K</td></tr>
+	<tr><td>Landscape</td><td>320</td><td>180</td><td>256K</td><td>64K</td></tr>
+	<tr><td>Portrait</td><td>640</td><td>640</td><td>1024K</td><td>96K</td></tr>
+	<tr><td>Portrait</td><td>480</td><td>480</td><td>768K</td><td>64K</td></tr>
+	<tr><td>Portrait</td><td>240</td><td>240</td><td>256K</td><td>64K</td></tr>
+</tbody></table>
+
 <h3>Common issues</h3>
 
 <p>Below are a number of common errors and issues when uploading media, and suggestions on how to resolve them.</p>
 
 <ul>
-<li><code>Invalid or unsupported media, Reason: UnsupportedMedia.</code> Format of the file does is not supported.The  <a href="https://dev.twitter.com/rest/public/uploading-media#videorecs" target="_target">video specifications
-and recommendations page</a> offers criteria for file uploads.
+<li><code>media parameter is invalid.</code> Format of the file does is not supported. See the most recent <a href="https://dev.twitter.com/rest/public/uploading-media#videorecs" target="_target">video specifications</a>.
+<li><code>Invalid or unsupported media, Reason: UnsupportedMedia.</code> Format of the file does is not supported. See the most recent <a href="https://dev.twitter.com/rest/public/uploading-media#videorecs" target="_target">video specifications</a>. 
 <li><code>Segments do not add up to provided total file size.</code> Either the INIT command specified the wrong initial size, 
 or the sum of the sizes of the chunks do not match the initial size. Alternatively, the chunks are not < 5MB each.
 <li><code>media type unrecognized.</code> Indicate you're using the non-chunked version of the media/upload API, or the media is unsupported.
