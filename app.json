@@ -3,6 +3,14 @@
 	"description":"Sample Python/Django site for Twitter showcasing OAuth and simple REST API calls. ",
 	"repository":"https://github.com/twitterdev/django-rest-apis",
 	"addons": ["heroku-postgresql:hobby-dev"],
+    "buildpacks": [
+      {
+        "url": "https://github.com/heroku/heroku-buildpack-python"
+      },
+      {
+        "url": "https://github.com/shunjikonishi/heroku-buildpack-ffmpeg"
+      }
+    ],
 	"keywords":[
 		"python",
 		"django",
