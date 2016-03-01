@@ -87,19 +87,6 @@ This code sample allows for restriction of Django admin based on IP. To enable t
 
    `adminrestrict.middleware.AdminPagesRestrictMiddleware`
 
-Enabling the Media Inspector
---------
-
-If you install ffprobe (as part of ffmpeg) you can get debug information about your video that is useful
-for determining if your video is compatible with the Twitter Video platform. The output looks like the below:
-
-<img src="media_inspector.png" style="width: 70%;"/>
-
-When posting video issues to the Twitter Community forums, please include the output of the Media Inspector
-to help us debug/investigate issues.
-
-To enable the media inspector, visit the [ffprobe/ffmpeg documentation](https://ffmpeg.org/ffprobe.html).
-
 Invalidate Twitter tokens 
 --------
 
@@ -142,14 +129,6 @@ Then log in via the Admin console and update your initial Twitter login user acc
 
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
-Additionally, you can get the ffprobe portion of the code sample working on Heroku as well. You need to do the following:
-
-- Set the root buildpack with the following setting:
-
-	heroku buildpacks:set https://github.com/integricho/heroku-buildpack-python-ffmpeg --app your-app-name
-	
-- Rebuild & deploy the app (either via command line or via the UI)
-
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/django-rest-apis)
 
 Invalidating Twitter tokens on Heroku
@@ -167,6 +146,39 @@ If this runs properly, follow the below steps to run it as a scheduled job on He
 - Type in `fab invalidate`
 
 Confirm successful execution by viewing the output in the Heroku app logs.
+
+Working with Video
+=========
+
+This sample code also allows you to upload and inspect video. It requires that ffprobe (as part of ffmpeg) 
+be installed on the machine. When installed, video uploads will show additional debugging information:
+
+<img src="media_inspector.png" style="width: 70%;"/>
+
+By default, the media debug is included on the publicly maintained version of this site: http://django-rest-apis.herokuapp.com.
+When posting video issues to the Twitter Community forums, please include the output of the Media Inspector
+to help us debug/investigate issues.
+
+Enabling ffmpeg
+---------
+
+To enable the ffmpeg on your local machine, visit the [ffprobe/ffmpeg documentation](https://ffmpeg.org/ffprobe.html).
+
+Enabling ffmpeg on Heroku
+----------
+
+Additionally, you can get the ffprobe portion of the code sample working on Heroku as well. You need to do the following:
+
+- Set the root buildpack with the following setting:
+
+	heroku buildpacks:set https://github.com/integricho/heroku-buildpack-python-ffmpeg --app your-app-name
+	
+Which will tell you to rebuild, as such:
+
+	Buildpack set. Next release on hellobootcamp will use https://github.com/integricho/heroku-buildpack-python-ffmpeg.
+	Run git push heroku master to create a new release using this buildpack.
+	
+- Rebuild & deploy the app (either via command line or via the UI)
 
 Notes
 ============
