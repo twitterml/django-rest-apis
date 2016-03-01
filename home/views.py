@@ -458,7 +458,7 @@ def media(request, type, examples, template):
             data = None        
             if not 'error' in json_data and not 'errors' in json_data:
                 
-                data = api._ParseAndCheckTwitter(json_data.content)
+                data = api._ParseAndCheckTwitter(json_data)
 
             response['tweet'] = data
             
@@ -805,6 +805,8 @@ class Log():
     def append(self, x):
         
         self.y = self.y + "\n" + x
+        if settings.DEBUG:
+            print x
         
     def out(self):
         
