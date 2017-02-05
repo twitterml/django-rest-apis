@@ -29,6 +29,13 @@ You can install these with the following command:
 
     pip install -r requirements.txt
 
+Be sure you are using pip 9.0.1 or higher to avoid issues installing 'cryptography'.
+
+You also need to have Postgres installed on your machine. Additionally, you should have pg_config in the path. One shortcut
+depending on your installation may be:
+
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+
 Getting Started
 ============
 
@@ -180,12 +187,40 @@ Which will tell you to rebuild, as such:
 	
 - Rebuild & deploy the app (either via command line or via the UI)
 
+Lastly, sample video provided by [TechSlides.com](http://techslides.com/sample-webm-ogg-and-mp4-video-files-for-html5).
+
 Notes
 ============
-If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the requst and the Twitter server.
 
-Use NTP to sync time on your server to compensate for the dift.
+**** Python libraries: six ****
 
-If you are getting this error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
+During installation of packages, you may get errors regarding the "six" Python library, as such:
 
-Lastly, sample video provided by [TechSlides.com](http://techslides.com/sample-webm-ogg-and-mp4-video-files-for-html5).
+    OSError: [Errno 1] Operation not permitted: '/tmp/pip-sUDfPK-uninstall/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/six-1.4.1-py2.7.egg-info'
+
+This is because Macs come with their own Python install and six library. To work around this, you need to do the following:
+
+    sudo -H pip install --ignore-installed six
+
+Read more here:
+
+    https://github.com/pypa/pip/issues/3165
+
+**** Python libraries: six ****
+
+During Python library installation, you may also get this error:
+
+    Command "/usr/bin/python -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-uUY19r/cryptography/setup.py';exec(compile(getattr(tokenize, 'open', open)(__file__).read().replace('\r\n', '\n'), __file__, 'exec'))" install --record /tmp/pip-sWMOT3-record/install-record.txt --single-version-externally-managed --compile" failed with error code 1 in /private/tmp/pip-build-uUY19r/cryptography
+
+Be sure you have a version of PIP 9.0.1 or higher.
+
+**** NTP/Time issues ****
+
+If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the
+request and the Twitter server. Use NTP to sync time on your server to compensate for the drift.
+
+If you are getting this
+error on OSX, toggle the "set time zone" checkbox off and back on in Date & Time system preferences for a manual and
+temporary fix. It has been reported that OSX 10.9 Mavericks has an issue with time drift.
+
+
