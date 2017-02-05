@@ -2,7 +2,9 @@ Django==1.9.1
 dj-database-url==0.3.0
 gunicorn==19.1.1
 psycopg2==2.5.1
-python-social-auth
+python-social-auth==0.2.21
+social-auth-core
+social-auth-app-django
 python-twitter==2.2
 django-adminrestrict
 django-csp==2.0.3
@@ -10,3 +12,5 @@ Fabric==1.7.0
 hachoir-core
 hachoir-parser
 hachoir-metadata
+cryptography
+pycrypto

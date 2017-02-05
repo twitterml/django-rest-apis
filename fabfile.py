@@ -3,7 +3,7 @@ from __future__ import with_statement
 import os
 import django
 
-SETTINGS_FILE = "app.settings"
+SETTINGS_FILE = "app.settings_my"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", SETTINGS_FILE)
 django.setup()
 
@@ -23,7 +23,7 @@ def invalidate():
     from django.utils import timezone
     from django.contrib.auth.models import User
     from django.db.models import Q
-    from social.apps.django_app.default.models import UserSocialAuth
+    from social_django.models import UserSocialAuth
  
     invalidate_delta = timezone.now() - timezone.timedelta(OFFBOARD_DAYS)
     print "Running invalidate process with date: %s" % (invalidate_delta)

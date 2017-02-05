@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^media/inspector', views.media_inspector, name='media_inspector'),
     url(r'^media', views.media_video, name='media_video'),
     url(r'^logout$', views.logout, name='logout'),
-    url('', include('social.apps.django_app.urls', namespace='social')),
+    url('', include('social_django.urls', namespace='social')),
     url(r'^admin/', admin.site.urls),
 )
 
