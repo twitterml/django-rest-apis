@@ -1,7 +1,7 @@
 Django==1.9.1
 dj-database-url==0.3.0
 gunicorn==19.1.1
-psycopg2==2.5.1
+psycopg2
 python-social-auth==0.2.21
 social-auth-core
 social-auth-app-django
